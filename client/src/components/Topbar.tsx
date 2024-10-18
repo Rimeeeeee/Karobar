@@ -7,6 +7,9 @@ import { readContract } from "thirdweb"
 import { useActiveAccount } from "thirdweb/react"
 import { download } from "thirdweb/storage"
 
+import Abc from "./Basename"
+
+
 // Define the User type
 interface User {
   username: string
@@ -98,7 +101,10 @@ const TopBar: React.FC = () => {
         <span className="dancing-script-500 text-gradient font-bold text-xl sm:text-4xl ml-14 sm:ml-0">
           K4R0B3R
         </span>
+      <Abc/>
+     
       </div>
+    
       {/* Connect button */}
       <div className="flex flex-row gap-1">
         <div className="hidden sm:block">{/* <Balance /> */}</div>
