@@ -17,6 +17,7 @@
     "@heroicons/react": "^1.0.6",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "dot-env": "^0.0.1",
+    "ethers": "^6.13.4",
     "framer-motion": "^11.11.1",
     "react": "^18.3",
     "react-currency-input-field": "^3.8.0",

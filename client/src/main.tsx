@@ -6,13 +6,19 @@ import "./index.css";
 import { WagmiProvider } from "wagmi";
 import { KBRTokenContextProvider } from "./context/context";
 
+
+
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThirdwebProvider>
+
       <KBRTokenContextProvider>
         <div className="no-scrollbar">
           <App />
         </div>
+
+    
+    
       </KBRTokenContextProvider>
     </ThirdwebProvider>
   </React.StrictMode>,
