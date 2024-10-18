@@ -2,7 +2,7 @@ import React from "react"
 import { FaCheckCircle } from "react-icons/fa" // Importing the verification icon
 
 interface RWATokenProps {
-  image: string
+  image?: string
   location: string
   area: string
   price: string
