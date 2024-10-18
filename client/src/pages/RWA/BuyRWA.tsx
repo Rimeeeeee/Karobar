@@ -30,7 +30,7 @@ const BuyRWA: React.FC = () => {
 
     getAllNFTs();
   }, [PropertyNFTContract, PeopleContract]);
-
+  console.log(nfts);
   return (
     <div className="h-screen p-4">
       {loading ? (
@@ -41,12 +41,12 @@ const BuyRWA: React.FC = () => {
             <RWAToken
               key={nft.tokenId}
               // image={nft.image_hash} // IPFS or hash of the image
-              location={nft.location}
-              area={nft.size}
-              price={nft.price}
-              ownerBaseName={nft.size}
-              verified={true} // Indicates if user is verified
-              onSale={nft.forSale} // Indicates if the NFT is for sale
+              // location={nft.location}
+              // area={nft.size}
+              // price={nft.price}
+              // ownerBaseName={nft.size}
+              // verified={true} // Indicates if user is verified
+              // onSale={nft.forSale} // Indicates if the NFT is for sale
             />
           ))}
         </div>

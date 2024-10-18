@@ -1,14 +1,14 @@
-import React from "react"
-import { FaCheckCircle } from "react-icons/fa" // Importing the verification icon
+import React from "react";
+import { FaCheckCircle } from "react-icons/fa"; // Importing the verification icon
 
 interface RWATokenProps {
-  image?: string
-  location: string
-  area: string
-  price: string
-  ownerBaseName: string
-  verified: boolean // New prop to control verification
-  onSale: boolean // New prop to control verification
+  image?: string;
+  location?: string;
+  area?: string;
+  price?: string;
+  ownerBaseName?: string;
+  verified?: boolean; // New prop to control verification
+  onSale?: boolean; // New prop to control verification
 }
 
 const RWAToken: React.FC<RWATokenProps> = ({
@@ -24,7 +24,7 @@ const RWAToken: React.FC<RWATokenProps> = ({
     <div
       className={
         `rounded-lg shadow-lg p-4 border-4 bg-zinc-950 w-full max-w-sm ` +
-        (onSale ? `border-teal-600` : `border-red-600`)
+        (onSale ? border-teal-600 : border-red-600)
       }
     >
       {/* Image with object-fit to cover */}
@@ -52,7 +52,7 @@ const RWAToken: React.FC<RWATokenProps> = ({
         Buy Now
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default RWAToken
+export default RWAToken;

@@ -39,7 +39,7 @@ const CreateRWA: React.FC = () => {
           formState.size,
           formState.papers,
         ],
-        value: ethers.parseEther("0.0001"), 
+        value: ethers.parseEther("0.0001"),
         // Set token value to 0.001 ether
       });
 
