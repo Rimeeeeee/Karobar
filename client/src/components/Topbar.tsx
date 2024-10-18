@@ -3,18 +3,9 @@ import { NavLink } from "react-router-dom";
 import { ThirdwebProvider, ConnectButton, darkTheme } from "thirdweb/react";
 // import { useSocialTokenContext } from "../context/context"
 // import Balance from "./Balance"
-
 import { readContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
-
-import { readContract } from "thirdweb"
-import { useActiveAccount } from "thirdweb/react"
-import { download } from "thirdweb/storage"
-
-import Abc from "./Basename"
-import { useKBRTokenContext } from "../context/context"
-
 
 import Abc from "./Basename";
 import { useKBRTokenContext } from "../context/context";
@@ -27,17 +18,10 @@ interface User {
 }
 
 const TopBar: React.FC = () => {
-
   const { client, wallets, KBRContract } = useKBRTokenContext();
   const [user, setUser] = useState<User | null>(null);
   const address = useActiveAccount()?.address;
 
-
-  //   const { client, wallets, SocialContract } = useSocialTokenContext()
-  const [user, setUser] = useState<User | null>(null)
-  const address = useActiveAccount()?.address;
-  const {client,wallets}=useKBRTokenContext();
-   
   //   useEffect(() => {
   //     const fetchUserData = async () => {
   //       if (address && SocialContract) {
@@ -52,7 +36,7 @@ const TopBar: React.FC = () => {
   //           // Fetch the image
   //           const response = await download({
   //             client,
-  //             uri: `${data.image_hash}`,
+  //             uri: ${data.image_hash},
   //           })
 
   //           const fileBlob = await response.blob()
@@ -104,14 +88,7 @@ const TopBar: React.FC = () => {
         <span className="dancing-script-500 text-gradient font-bold text-xl sm:text-4xl ml-14 sm:ml-0">
           K4R0B3R
         </span>
-
       </div>
-
-
-      
-     
-      </div>
-      <Abc/>
 
       {/* Connect button */}
       <div className="flex flex-row gap-1">
@@ -121,11 +98,7 @@ const TopBar: React.FC = () => {
           wallets={wallets}
           theme={darkTheme({})}
           connectModal={{ size: "compact" }}
-
         />
-
-        /> 
-
       </div>
     </div>
   );

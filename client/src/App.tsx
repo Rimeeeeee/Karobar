@@ -13,8 +13,6 @@ import MyCampaign from "./pages/MyCampaign";
 import Login from "./pages/Login";
 import DailyLogin from "./pages/DailyLogin";
 import People from "./pages/People";
-import CreateRWA from "./pages/RWA/CreateRWA";
-
 
 export function App() {
   return (
@@ -40,12 +38,9 @@ export function App() {
               <Route path="/rwa/*" element={<RWA />} />
               <Route path="/donate" element={<Charity />} />
               <Route path="/mycampaigns" element={<MyCampaign />} />
-
               <Route path="/login" element={<Login />} />
               <Route path="/dailylogin" element={<DailyLogin />} />
               <Route path="/people" element={<People />} />
-              <Route path="/create-rwa" element={<CreateRWA />} />
-
               {/* Add additional routes as needed */}
             </Routes>
           </main>
