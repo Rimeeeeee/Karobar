@@ -8,6 +8,7 @@ import { useActiveAccount } from "thirdweb/react"
 import { download } from "thirdweb/storage"
 
 import Abc from "./Basename"
+import { useKBRTokenContext } from "../context/context"
 
 
 // Define the User type
@@ -20,8 +21,9 @@ interface User {
 const TopBar: React.FC = () => {
   //   const { client, wallets, SocialContract } = useSocialTokenContext()
   const [user, setUser] = useState<User | null>(null)
-  const address = useActiveAccount()?.address
-
+  const address = useActiveAccount()?.address;
+  const {client,wallets}=useKBRTokenContext();
+   
   //   useEffect(() => {
   //     const fetchUserData = async () => {
   //       if (address && SocialContract) {
@@ -101,19 +103,19 @@ const TopBar: React.FC = () => {
         <span className="dancing-script-500 text-gradient font-bold text-xl sm:text-4xl ml-14 sm:ml-0">
           K4R0B3R
         </span>
-      <Abc/>
+      
      
       </div>
-    
+      <Abc/>
       {/* Connect button */}
       <div className="flex flex-row gap-1">
         <div className="hidden sm:block">{/* <Balance /> */}</div>
-        {/* <ConnectButton
+        <ConnectButton
           client={client}
           wallets={wallets}
           theme={darkTheme({})}
           connectModal={{ size: "compact" }}
-        /> */}
+        /> 
       </div>
     </div>
   )

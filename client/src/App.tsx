@@ -10,6 +10,7 @@ import Swap from "./pages/Swap";
 import RWA from "./pages/RWA";
 import Charity from "./pages/Charity";
 import MyCampaign from "./pages/MyCampaign";
+import CreateRWA from "./pages/RWA/CreateRWA";
 
 export function App() {
   return (
@@ -35,6 +36,7 @@ export function App() {
               <Route path="/rwa/*" element={<RWA />} />
               <Route path="/donate" element={<Charity />} />
               <Route path="/mycampaigns" element={<MyCampaign />} />
+              <Route path="/create-rwa" element={<CreateRWA />} />
               {/* Add additional routes as needed */}
             </Routes>
           </main>

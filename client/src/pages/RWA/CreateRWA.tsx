@@ -1,187 +1,243 @@
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react"
-import { IoCloudUploadOutline } from "react-icons/io5"
-import { MdLibraryAdd } from "react-icons/md"
+import React, { useEffect, useState } from "react";
+import { useActiveAccount } from "thirdweb/react";
+import { createWallet } from "thirdweb/wallets";
+import { prepareContractCall, sendTransaction } from "thirdweb";
+import { upload } from "thirdweb/storage";
+import { useKBRTokenContext } from "../../context/context";
+import { ethers } from "ethers";
 
-const CreateRWA = () => {
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const [documentFile, setDocumentFile] = useState<File | null>(null)
-  const [price, setPrice] = useState<string>("")
-  const [location, setLocation] = useState<string>("")
-  const [size, setSize] = useState<string>("")
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const imageInputRef = useRef<HTMLInputElement | null>(null)
-  const documentInputRef = useRef<HTMLInputElement | null>(null)
+const CreateRWA: React.FC = () => {
+  const [formState, setFormState] = useState({
+    token_image: "",
+    price: "",
+    location: "",
+    size: "",
+    papers: "",
+  });
+  const [createPropertySuccess, setCreatePropertySuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { KBRContract, PropertyNFTContract, client } = useKBRTokenContext();
+  const address = useActiveAccount()?.address;
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImageFile(e.target.files[0])
+  const createProperty = async () => {
+    try {
+      if (!PropertyNFTContract?.address || !address) {
+        throw new Error("Invalid contract or account address.");
+      }
+
+      const wallet = createWallet("io.metamask");
+      const account = await wallet.connect({ client });
+
+      const transaction = await prepareContractCall({
+        contract: PropertyNFTContract,
+        method:
+          "function createProperty(string propertyURI, uint256 price, string _location, string _size, string _papers) payable returns (uint256)",
+        params: [
+          formState.token_image,
+          BigInt(ethers.parseEther(formState.price)),
+          formState.location,
+          formState.size,
+          formState.papers,
+        ],
+        value: ethers.parseEther("0.0001"), 
+        // Set token value to 0.001 ether
+      });
+
+      const { transactionHash } = await sendTransaction({
+        transaction,
+        account,
+      });
+
+      console.log(
+        "Property creation successful, transaction hash:",
+        transactionHash,
+      );
+      return transactionHash;
+    } catch (error) {
+      console.error("Error during property creation:", error);
+      setError("Failed to create property.");
+      throw error;
     }
-  }
+  };
 
-  const handleDocumentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setDocumentFile(e.target.files[0])
+  const handlePropertyCreation = async () => {
+    try {
+      if (
+        formState.token_image &&
+        formState.price &&
+        formState.location &&
+        formState.size &&
+        formState.papers
+      ) {
+        await createProperty();
+        setCreatePropertySuccess(true);
+        alert("Property created successfully!");
+        setTimeout(() => setCreatePropertySuccess(false), 3000);
+        setFormState({
+          token_image: "",
+          price: "",
+          location: "",
+          size: "",
+          papers: "",
+        });
+      } else {
+        setError("Please fill all fields correctly.");
+      }
+    } catch (err) {
+      console.error("Error creating property:", err);
+      setError("Failed to create property.");
     }
-  }
+  };
 
-  const renderFilePreview = () => {
-    if (!imageFile) return null
-
-    const fileURL = URL.createObjectURL(imageFile)
-
-    if (imageFile.type.startsWith("image/")) {
-      return (
-        <div className="mt-4">
-          <img
-            src={fileURL}
-            alt="Preview"
-            className="max-w-full h-auto border border-gray-300 rounded-md"
-          />
-          <p className="text-gray-600 mt-2">{imageFile.name}</p>
-        </div>
-      )
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(timer);
     }
-    return <p className="text-gray-600 mt-2">Unsupported file type</p>
-  }
+  }, [error]);
 
-  const renderDocumentPreview = () => {
-    if (!documentFile) return null
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-    return (
-      <div className="mt-4">
-        <p className="text-gray-600">{documentFile.name}</p>
-      </div>
-    )
-  }
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const uris = await upload({
+          client,
+          files: [file],
+        });
+        setFormState((prevState) => ({
+          ...prevState,
+          token_image: uris,
+        }));
+      } catch (error) {
+        console.error("Error uploading file to IPFS:", error);
+      }
+    }
+  };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    // Handle form submission logic
-  }
+  const handleFileChange1 = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const uris = await upload({
+          client,
+          files: [file],
+        });
+        setFormState((prevState) => ({
+          ...prevState,
+          papers: uris,
+        }));
+      } catch (error) {
+        console.error("Error uploading file to IPFS:", error);
+      }
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handlePropertyCreation();
+  };
 
   return (
-    <div className="relative mt-20">
-      <div className="relative max-w-md mx-auto mr-5 sm:mr-0 p-2 bg-black bg-opacity-30 border-2 border-white rounded-lg sm:p-6 h-full overflow-y-auto scrollbar-hidden">
-        <div>
-          <h1 className="my-2 text-xl font-extrabold text-white flex flex-row gap-2 sm:text-3xl">
-            <MdLibraryAdd className="mt-1" />
-            List your Property on Chain!!
-          </h1>
-
-          {/* Image Upload Input */}
-          <div className="mb-4">
-            <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-              Upload Image
+    <div className="flex items-center justify-center h-[85vh] bg-transparent text-white p-4">
+      <div className="bg-transparent z-10 hover:bg-zinc-900 mr-10 bg-opacity-100 border-white border-2 p-4 md:p-8 rounded-lg shadow-lg max-w-sm md:max-w-2xl lg:max-w-3xl">
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Create Your Property Token
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col">
+            <label htmlFor="token_image" className="text-sm font-medium">
+              Token Image:
             </label>
             <input
               type="file"
-              ref={imageInputRef}
-              onChange={handleImageChange}
+              id="token_image"
+              name="token_image"
               accept="image/*"
-              className="mt-1 w-full border border-gray-800 bg-zinc-950 text-white rounded-lg file:py-2 file:px-4 file:border-0 file:text-white file:bg-blue-600 hover:file:bg-blue-700"
+              onChange={handleFileChange}
+              className="mt-1 border border-gray-800 bg-zinc-950 text-white rounded-lg file:py-2 file:px-4 file:border-0 file:text-white file:bg-blue-600 hover:file:bg-blue-700"
             />
-            {errors.image && (
-              <p className="text-red-500 mt-2">{errors.image}</p>
-            )}
-            {renderFilePreview()}
           </div>
 
-          {/* Document Upload Input */}
-          <div className="mb-4">
-            <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-              Upload Document
-            </label>
-            <input
-              type="file"
-              ref={documentInputRef}
-              onChange={handleDocumentChange}
-              accept=".pdf,.doc,.docx,.txt"
-              className="mt-1 w-full border border-gray-800 bg-zinc-950 text-white rounded-lg file:py-2 file:px-4 file:border-0 file:text-white file:bg-blue-600 hover:file:bg-blue-700"
-            />
-            {errors.document && (
-              <p className="text-red-500 mt-2">{errors.document}</p>
-            )}
-            {renderDocumentPreview()}
-          </div>
-
-          {/* Price Input */}
-          <div className="mb-4">
-            <label
-              htmlFor="price"
-              className="block text-gray-300 mb-2 text-sm sm:text-base"
-            >
-              Price
+          <div className="flex flex-col">
+            <label htmlFor="price" className="text-sm font-medium">
+              Price:
             </label>
             <input
               type="text"
               id="price"
-              value={price}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setPrice(e.target.value)
-              }
-              className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-              placeholder="Enter price"
+              name="price"
+              placeholder="Enter the price"
+              value={formState.price}
+              onChange={handleChange}
+              className="mt-1 p-2 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.price && (
-              <p className="text-red-500 mt-2">{errors.price}</p>
-            )}
           </div>
 
-          {/* Location Input */}
-          <div className="mb-4">
-            <label
-              htmlFor="location"
-              className="block text-gray-300 mb-2 text-sm sm:text-base"
-            >
-              Location
+          <div className="flex flex-col">
+            <label htmlFor="location" className="text-sm font-medium">
+              Location:
             </label>
             <input
               type="text"
               id="location"
-              value={location}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setLocation(e.target.value)
-              }
-              className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-              placeholder="Enter location"
+              name="location"
+              placeholder="Enter the location"
+              value={formState.location}
+              onChange={handleChange}
+              className="mt-1 p-2 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.location && (
-              <p className="text-red-500 mt-2">{errors.location}</p>
-            )}
           </div>
 
-          {/* Size Input */}
-          <div className="mb-4">
-            <label
-              htmlFor="size"
-              className="block text-gray-300 mb-2 text-sm sm:text-base"
-            >
-              Size
+          <div className="flex flex-col">
+            <label htmlFor="size" className="text-sm font-medium">
+              Size:
             </label>
             <input
               type="text"
               id="size"
-              value={size}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setSize(e.target.value)
-              }
-              className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-              placeholder="Enter size"
+              name="size"
+              placeholder="Enter the property size"
+              value={formState.size}
+              onChange={handleChange}
+              className="mt-1 p-2 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.size && <p className="text-red-500 mt-2">{errors.size}</p>}
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="papers" className="text-sm font-medium">
+              Property Papers:
+            </label>
+            <input
+              type="file"
+              id="papers"
+              name="papers"
+              onChange={handleFileChange1}
+              className="mt-1 border border-gray-800 bg-zinc-950 text-white rounded-lg file:py-2 file:px-4 file:border-0 file:text-white file:bg-blue-600 hover:file:bg-blue-700"
+            />
           </div>
 
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-md font-bold hover:bg-blue-700 w-full flex justify-center text-sm sm:text-base"
+            className="mt-20 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 w-full"
           >
-            <IoCloudUploadOutline className="text-xl sm:text-2xl mx-2 font-bold" />
-            Create
+            Create Property Token
           </button>
-        </div>
+        </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateRWA
+export default CreateRWA;

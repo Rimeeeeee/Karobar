@@ -13,7 +13,8 @@ contract PropertyNFT is ERC721URIStorage {
     Counters.Counter private _propertyIds;
     Counters.Counter private _itemsSold;
     address payable owner;
-    uint256 listPrice = 0.01 ether;
+    uint256 listPrice = 0.0001 ether;//will update later
+    
     KBRToken public kbrtoken;
     People public people;
     struct ListedProperty {

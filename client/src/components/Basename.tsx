@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAvatar, getName } from '@coinbase/onchainkit/identity';
-import { base } from 'viem/chains';
+import { base, baseSepolia } from 'viem/chains';
 import { useActiveAccount } from 'thirdweb/react';
 
 const basename = 'karobar.basetest.eth';
@@ -22,7 +22,7 @@ const Abc = () => {
             }
 
             try {
-                const fetchedAvatar = await getAvatar({ ensName: basename, chain: base });
+                const fetchedAvatar = await getAvatar({ ensName: basename, chain: baseSepolia });
                 const fetchedName = await getName({ address, chain: base });
                 setAvatar(fetchedAvatar);
                 setName(fetchedName);
