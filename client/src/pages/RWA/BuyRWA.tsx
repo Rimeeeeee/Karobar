@@ -11,7 +11,6 @@ const BuyRWA: React.FC = () => {
   useEffect(() => {
     const getAllNFTs = async () => {
       try {
-        // Fetch all NFTs from the contract
         const nftData = await readContract({
           contract: PropertyNFTContract,
           method:
@@ -20,8 +19,8 @@ const BuyRWA: React.FC = () => {
         });
         console.log("NFT Data:", nftData);
 
-        // Use Array.from to create a mutable copy of the readonly array
         setNfts(Array.from(nftData));
+        setLoading(false); // Set loading to false after successful fetch
       } catch (error: any) {
         console.error("Error fetching NFTs", error);
         setLoading(false);
@@ -30,27 +29,35 @@ const BuyRWA: React.FC = () => {
 
     getAllNFTs();
   }, [PropertyNFTContract, PeopleContract]);
+
+  if (loading) {
+    return <p className="text-white">Loading NFTs...</p>;
+  }
+
+  if (!nfts.length) {
+    return <p className="text-white">No NFTs available for sale.</p>;
+  }
+
   console.log(nfts);
+
   return (
     <div className="h-screen p-4">
-      {loading ? (
-        <p className="text-white">Loading NFTs...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4 overflow-y-auto no-scrollbar mt-12">
-          {nfts.map((nft) => (
-            <RWAToken
-              key={nft.tokenId}
-              // image={nft.image_hash} // IPFS or hash of the image
-              // location={nft.location}
-              // area={nft.size}
-              // price={nft.price}
-              // ownerBaseName={nft.size}
-              // verified={true} // Indicates if user is verified
-              // onSale={nft.forSale} // Indicates if the NFT is for sale
-            />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4 overflow-y-auto no-scrollbar mt-12">
+        {nfts.map((nft, index) => (
+          <RWAToken
+            key={`${nft.tokenId.toString()}-${index}`} // Ensure unique key
+            papers={nft.papers} // Use papers for the image URI
+            creatorAddress={nft.owner}
+            sellerAddress={nft.seller}
+            price={nft.price}
+            uri={nft.papers} // Using papers as the image hash for URI
+            tokenId={nft.tokenId.toString()} // Convert BigInt to string directly
+            forSale={nft.forSale}
+            location={nft.location}
+            size={nft.size}
+          />
+        ))}
+      </div>
     </div>
   );
 };

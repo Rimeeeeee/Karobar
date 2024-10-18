@@ -14,9 +14,11 @@ import Login from "./pages/Login";
 import DailyLogin from "./pages/DailyLogin";
 import People from "./pages/People";
 import ViewProfile from "./pages/ViewPage";
-
-
+import FollowingPage from "./pages/Following";
+import { useKBRTokenContext } from "./context/context";
+import FollowersPage from "./pages/Follower";
 export function App() {
+  const { PeopleContract } = useKBRTokenContext();
   return (
     <Router>
       <div className="flex min-h-screen">
@@ -43,15 +45,15 @@ export function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/dailylogin" element={<DailyLogin />} />
               <Route path="/people" element={<People />} />
+              <Route path="/profile/:userId" element={<ViewProfile />} />
               <Route
-            path="/profile/:userId"
-            element={
-              
-                <ViewProfile />
-            
-            }
-          />
-              {/* Add additional routes as needed */}
+                path="/following/:creatorAddress"
+                element={<FollowingPage contract={PeopleContract} />}
+              />
+              <Route
+                path="/followers/:creatorAddress"
+                element={<FollowersPage contract={PeopleContract} />}
+              />
             </Routes>
           </main>
         </div>
