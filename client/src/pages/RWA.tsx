@@ -1,20 +1,20 @@
-import React from "react"
-import { Route, Routes, useLocation } from "react-router-dom"
-import BuyRWA from "./RWA/BuyRWA"
-import MyRWA from "./RWA/MyRWA"
-import CreateRWA from "./RWA/CreateRWA"
-import SideMenu from "./RWA/SideMenu"
-import SideBar from "../components/SideBar"
+import React from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import BuyRWA from "./RWA/BuyRWA";
+import MyRWA from "./RWA/MyRWA";
+import CreateRWA from "./RWA/CreateRWA";
+import SideMenu from "./RWA/SideMenu";
+import SideBar from "../components/SideBar";
 
 const RWA: React.FC = () => {
-  const location = useLocation() // Get the current route location
+  const location = useLocation(); // Get the current route location
 
   // Check if the current path is one of the routes
   const isRouteMatched = [
     "/rwa/buy-rwa",
     "/rwa/my-rwa",
     "/rwa/create-rwa",
-  ].includes(location.pathname)
+  ].includes(location.pathname);
 
   return (
     <div className="flex h-screen bg-black">
@@ -37,7 +37,7 @@ const RWA: React.FC = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RWA
+export default RWA;

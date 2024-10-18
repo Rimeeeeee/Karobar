@@ -8,13 +8,12 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract PropertyNFT is ERC721URIStorage {
-
     using Counters for Counters.Counter;
     Counters.Counter private _propertyIds;
     Counters.Counter private _itemsSold;
     address payable owner;
-    uint256 listPrice = 0.0001 ether;//will update later
-    
+    uint256 listPrice = 0.0001 ether; //will update later
+
     KBRToken public kbrtoken;
     People public people;
     struct ListedProperty {
@@ -28,7 +27,7 @@ contract PropertyNFT is ERC721URIStorage {
         string papers;
         bool forSale;
     }
-    event PropertyListedSuccess (
+    event PropertyListedSuccess(
         uint256 indexed tokenId,
         address owner,
         address seller,
@@ -41,11 +40,11 @@ contract PropertyNFT is ERC721URIStorage {
     );
     mapping(uint256 => ListedProperty) private idToListedProperty;
 
-    constructor(address ot,address ot1) ERC721("PropertyNFT", "KBRT") {
+    constructor(address ot, address ot1) ERC721("PropertyNFT", "KBRT") {
         kbrtoken = KBRToken(ot);
-        people=People(ot1);
+        people = People(ot1);
         owner = payable(msg.sender);
-         kbrtoken.mint(address(this), 30000000 * (10 ** kbrtoken.decimals()));
+        kbrtoken.mint(address(this), 30000000 * (10 ** kbrtoken.decimals()));
         kbrtoken.approve(address(this), 300000 * (10 ** kbrtoken.decimals()));
         kbrtoken.allowance(msg.sender, address(this));
     }
@@ -59,28 +58,54 @@ contract PropertyNFT is ERC721URIStorage {
         return listPrice;
     }
 
-    function getLatestIdToListedProperty() public view returns (ListedProperty memory) {
+    function getLatestIdToListedProperty()
+        public
+        view
+        returns (ListedProperty memory)
+    {
         uint256 currentPropertyId = _propertyIds.current();
         return idToListedProperty[currentPropertyId];
     }
 
-    function getListedPropertyForId(uint256 propertyId) public view returns (ListedProperty memory) {
+    function getListedPropertyForId(
+        uint256 propertyId
+    ) public view returns (ListedProperty memory) {
         return idToListedProperty[propertyId];
     }
 
     function getCurrentProperty() public view returns (uint256) {
         return _propertyIds.current();
     }
-    function createProperty(string memory propertyURI, uint256 price,string memory _location,string memory _size,string memory _papers) public payable returns (uint) {
-         require(people.checkIsAUser(msg.sender)==true,"only users");
-        require(people.checkUserVerified(msg.sender)==true,"only user verified");
-         require(people.checkUserBlacklisted(msg.sender)==false,"shouldnt be blacklisted");
+
+    function createProperty(
+        string memory propertyURI,
+        uint256 price,
+        string memory _location,
+        string memory _size,
+        string memory _papers
+    ) public payable returns (uint) {
+        require(people.checkIsAUser(msg.sender) == true, "only users");
+        require(
+            people.checkUserVerified(msg.sender) == true,
+            "only user verified"
+        );
+        require(
+            people.checkUserBlacklisted(msg.sender) == false,
+            "shouldnt be blacklisted"
+        );
         _propertyIds.increment();
         uint256 newPropertyId = _propertyIds.current();
         _safeMint(msg.sender, newPropertyId);
         _setTokenURI(newPropertyId, propertyURI);
-        createListedProperty(newPropertyId, price,_location,_size,_papers,true);
-         kbrtoken.transferFrom(
+        createListedProperty(
+            newPropertyId,
+            price,
+            _location,
+            _size,
+            _papers,
+            true
+        );
+        kbrtoken.transferFrom(
             address(this),
             msg.sender,
             10 * (10 ** kbrtoken.decimals())
@@ -89,7 +114,14 @@ contract PropertyNFT is ERC721URIStorage {
         return newPropertyId;
     }
 
-    function createListedProperty(uint256 tokenId, uint256 price,string memory _location,string memory _size,string memory _papers,bool _forSale) private {
+    function createListedProperty(
+        uint256 tokenId,
+        uint256 price,
+        string memory _location,
+        string memory _size,
+        string memory _papers,
+        bool _forSale
+    ) private {
         require(msg.value == listPrice, "Hopefully sending the correct price");
         require(price > 0, "Make sure the price isn't negative");
         idToListedProperty[tokenId] = ListedProperty(
@@ -117,37 +149,44 @@ contract PropertyNFT is ERC721URIStorage {
             _forSale
         );
     }
+
     function getAllNFTs() public view returns (ListedProperty[] memory) {
         uint nftCount = _propertyIds.current();
         ListedProperty[] memory properties = new ListedProperty[](nftCount);
         uint currentIndex = 0;
-        for(uint i=0;i<nftCount;i++)
-        {
+        for (uint i = 0; i < nftCount; i++) {
             uint currentId = i + 1;
             ListedProperty storage currentItem = idToListedProperty[currentId];
             properties[currentIndex] = currentItem;
             currentIndex += 1;
         }
-       
+
         return properties;
     }
-    
+
     function getMyNFTs() public view returns (ListedProperty[] memory) {
-          require(people.checkIsAUser(msg.sender)==true,"only users");
+        require(people.checkIsAUser(msg.sender) == true, "only users");
         uint totalItemCount = _propertyIds.current();
         uint itemCount = 0;
         uint currentIndex = 0;
-        for(uint i=0; i < totalItemCount; i++)
-        {
-            if(idToListedProperty[i+1].owner == msg.sender || idToListedProperty[i+1].seller == msg.sender){
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (
+                idToListedProperty[i + 1].owner == msg.sender ||
+                idToListedProperty[i + 1].seller == msg.sender
+            ) {
                 itemCount += 1;
             }
         }
         ListedProperty[] memory items = new ListedProperty[](itemCount);
-        for(uint i=0; i < totalItemCount; i++) {
-            if(idToListedProperty[i+1].owner == msg.sender || idToListedProperty[i+1].seller == msg.sender) {
-                uint currentId = i+1;
-                ListedProperty storage currentItem = idToListedProperty[currentId];
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (
+                idToListedProperty[i + 1].owner == msg.sender ||
+                idToListedProperty[i + 1].seller == msg.sender
+            ) {
+                uint currentId = i + 1;
+                ListedProperty storage currentItem = idToListedProperty[
+                    currentId
+                ];
                 items[currentIndex] = currentItem;
                 currentIndex += 1;
             }
@@ -156,37 +195,46 @@ contract PropertyNFT is ERC721URIStorage {
     }
 
     function executeSale(uint256 tokenId) public payable {
-        require(people.checkIsAUser(msg.sender)==true,"only users");
-        require(idToListedProperty[tokenId].forSale==true,"not listed for sale");
-         require(people.checkUserBlacklisted(msg.sender)==false,"shouldnt be blacklisted");
+        require(people.checkIsAUser(msg.sender) == true, "only users");
+        require(
+            idToListedProperty[tokenId].forSale == true,
+            "not listed for sale"
+        );
+        require(
+            people.checkUserBlacklisted(msg.sender) == false,
+            "shouldnt be blacklisted"
+        );
         uint price = idToListedProperty[tokenId].price;
         address seller = idToListedProperty[tokenId].seller;
         idToListedProperty[tokenId].currentlyListed = true;
         idToListedProperty[tokenId].seller = payable(msg.sender);
-         _transfer(address(this), msg.sender, tokenId);
+        _transfer(address(this), msg.sender, tokenId);
 
         _itemsSold.increment();
-         approve(address(this), tokenId);
-         payable(owner).transfer(listPrice);
-         payable(seller).transfer(msg.value);
-          kbrtoken.transferFrom(
+        approve(address(this), tokenId);
+        payable(owner).transfer(listPrice);
+        payable(seller).transfer(msg.value);
+        kbrtoken.transferFrom(
             address(this),
             msg.sender,
-            10* (10 ** kbrtoken.decimals())
+            10 * (10 ** kbrtoken.decimals())
         );
-          people.updateUserRating(msg.sender);
+        people.updateUserRating(msg.sender);
     }
-     function updateForSell(uint256 _tokenId)external{
-        require(idToListedProperty[_tokenId].seller==msg.sender,"invalid requestor");
-        if(idToListedProperty[_tokenId].forSale==true){
-            idToListedProperty[_tokenId].forSale=false;
+
+    function updateForSell(uint256 _tokenId) external {
+        require(
+            idToListedProperty[_tokenId].seller == msg.sender,
+            "invalid requestor"
+        );
+        if (idToListedProperty[_tokenId].forSale == true) {
+            idToListedProperty[_tokenId].forSale = false;
+        } else {
+            idToListedProperty[_tokenId].forSale = true;
         }
-        else{
-            idToListedProperty[_tokenId].forSale=true;
-        }
-            
-     }
+    }
 }
+
 contract KBRToken is ERC20, ERC20Burnable {
     address payable owner;
 
@@ -211,6 +259,7 @@ contract KBRToken is ERC20, ERC20Burnable {
 
 error AlreadyAnUser();
 error InvalidAccess();
+
 contract People {
     address immutable owner;
     KBRToken public kbrtoken;
@@ -222,6 +271,7 @@ contract People {
         kbrtoken.approve(address(this), 300000 * (10 ** kbrtoken.decimals()));
         kbrtoken.allowance(msg.sender, address(this));
     }
+
     struct User {
         uint256 uid;
         address userid;
@@ -242,12 +292,13 @@ contract People {
     mapping(address => bool) private gotInitial;
     mapping(address => User) public userCheck;
     mapping(uint256 => User) public users;
-    mapping(address=>bool) private permittedContracts;
+    mapping(address => bool) private permittedContracts;
     User[] userArray;
 
     uint256 totalUserCount = 0;
     uint256 registerCount = 0;
-    uint256 permittedContractsCounts=0;
+    uint256 permittedContractsCounts = 0;
+
     function register(
         string memory _name,
         string memory _bio,
@@ -263,16 +314,17 @@ contract People {
         user.bio = _bio;
         user.image_hash = _image_hash;
         user.caption = _caption;
-        user.userRating+=1;
+        user.userRating += 1;
         userCheck[msg.sender] = user;
         isAUser[msg.sender] = true;
         userArray.push(user);
         sendInitial();
-       
     }
+
     function getBalance(address a) public view returns (uint256) {
         return kbrtoken.balanceOf(a);
     }
+
     function sendInitial() internal {
         registerCount++;
         kbrtoken.transferFrom(
@@ -283,33 +335,42 @@ contract People {
         userCheck[msg.sender].token = kbrtoken.balanceOf(msg.sender);
         gotInitial[msg.sender] = true;
     }
-     function follow(address _user) external {
+
+    function follow(address _user) external {
         require(isAUser[msg.sender] == true, "should be user");
-        require(userCheck[msg.sender].blacklisted==false,"shouldnt be blacklisted");
+        require(
+            userCheck[msg.sender].blacklisted == false,
+            "shouldnt be blacklisted"
+        );
         userCheck[_user].followers.push(msg.sender);
         followingUpdate(_user);
-         userCheck[msg.sender].userRating+=1;
-        
+        userCheck[msg.sender].userRating += 1;
     }
 
     function followingUpdate(address _user) internal {
         userCheck[msg.sender].following.push(_user);
     }
+
     function getFollowers(
         address _creator
     ) external view returns (address[] memory) {
         User storage user = userCheck[_creator];
         return user.followers;
     }
+
     function getFollowing(
         address _creator
     ) external view returns (address[] memory) {
         User storage user = userCheck[_creator];
         return user.following;
     }
+
     function unfollow(address _follower) external {
         require(isAUser[msg.sender] == true, "should be user");
-         require(userCheck[msg.sender].blacklisted==false,"shouldnt be blacklisted");
+        require(
+            userCheck[msg.sender].blacklisted == false,
+            "shouldnt be blacklisted"
+        );
         User storage user = userCheck[msg.sender];
         bool x = false;
         for (uint i = 0; i < user.following.length; i++) {
@@ -343,16 +404,22 @@ contract People {
             user1.followers.pop();
         }
     }
+
     function getUserById(address _user) external view returns (User memory) {
         User storage user = userCheck[_user];
         return user;
     }
+
     function getAllUsers() external view returns (User[] memory) {
         return userArray;
     }
+
     function dailyCheckinHandler() external {
         require(isAUser[msg.sender] == true, "should be user");
-         require(userCheck[msg.sender].blacklisted==false,"shouldnt be blacklisted");
+        require(
+            userCheck[msg.sender].blacklisted == false,
+            "shouldnt be blacklisted"
+        );
         User storage user = userCheck[msg.sender];
         if (user.dailycheckins.length == 0) {
             user.dailycheckin = 1;
@@ -380,120 +447,147 @@ contract People {
             }
         }
     }
-    function blacklistUserCheck(address _user)external{
-        require(msg.sender==owner,"Must be owner");
-        require(isAUser[_user]==true,"must be user");
-        if(userCheck[_user].blacklisted==true){
-            userCheck[_user].blacklisted=false;
-        }
-        else{
-            userCheck[_user].blacklisted=true;
+
+    function blacklistUserCheck(address _user) external {
+        require(msg.sender == owner, "Must be owner");
+        require(isAUser[_user] == true, "must be user");
+        if (userCheck[_user].blacklisted == true) {
+            userCheck[_user].blacklisted = false;
+        } else {
+            userCheck[_user].blacklisted = true;
         }
     }
-    function provideContractPermission(address _contract)external{
-        require(msg.sender==owner,"only owner can modify");
+
+    function provideContractPermission(address _contract) external {
+        require(msg.sender == owner, "only owner can modify");
         permittedContractsCounts++;
-        permittedContracts[_contract]=true;
+        permittedContracts[_contract] = true;
     }
-     function updateContractPermission(address _contract)external{
-        require(msg.sender==owner,"only owner can modify");
-      if( permittedContracts[_contract]==true){
-         permittedContracts[_contract]=false;
-      }
-      else{
-         permittedContracts[_contract]=true;
-      }
+
+    function updateContractPermission(address _contract) external {
+        require(msg.sender == owner, "only owner can modify");
+        if (permittedContracts[_contract] == true) {
+            permittedContracts[_contract] = false;
+        } else {
+            permittedContracts[_contract] = true;
+        }
     }
-    function updateUserRating(address _user)public{
-        require(permittedContracts[msg.sender]==true,"only permitted contracts can update");
-         require(userCheck[msg.sender].blacklisted==false,"shouldnt be blacklisted");
-         require(isAUser[_user]==true,"must be user");
-         userCheck[_user].userRating+=1;
-       
+
+    function updateUserRating(address _user) public {
+        require(
+            permittedContracts[msg.sender] == true,
+            "only permitted contracts can update"
+        );
+        require(
+            userCheck[msg.sender].blacklisted == false,
+            "shouldnt be blacklisted"
+        );
+        require(isAUser[_user] == true, "must be user");
+        userCheck[_user].userRating += 1;
     }
-    function checkIsAUser(address _user)view external returns(bool){
+
+    function checkIsAUser(address _user) external view returns (bool) {
         return isAUser[_user];
     }
-    function verifyUser(address _user)external{
-        require(msg.sender==owner,"only owner can update");
-        require(isAUser[_user]==true,"not an user");
-        userCheck[_user].verifiedUser=true;
+
+    function verifyUser(address _user) external {
+        require(msg.sender == owner, "only owner can update");
+        require(isAUser[_user] == true, "not an user");
+        userCheck[_user].verifiedUser = true;
     }
-    function checkUserVerified(address _user)view external returns(bool){
+
+    function checkUserVerified(address _user) external view returns (bool) {
         return userCheck[_user].verifiedUser;
     }
-    function checkUserBlacklisted(address _user)view external returns(bool){
+
+    function checkUserBlacklisted(address _user) external view returns (bool) {
         return userCheck[_user].blacklisted;
     }
 }
-contract BetterIndia{
+
+contract BetterIndia {
     address immutable owner;
     People people;
-    constructor(address ot){
-       owner=msg.sender;
-       people=People(ot);
+
+    constructor(address ot) {
+        owner = msg.sender;
+        people = People(ot);
     }
-    struct MakeBetter{
-      string title;
-      string description;
-      string imageHash;
-      address creator;
-      uint256 deadline;
-      uint256 amountCollected;
-      address []donators;
+
+    struct MakeBetter {
+        string title;
+        string description;
+        string imageHash;
+        address creator;
+        uint256 deadline;
+        uint256 amountCollected;
+        address[] donators;
     }
-    mapping(uint256=>MakeBetter) public gifts;
+    mapping(uint256 => MakeBetter) public gifts;
     MakeBetter[] giftsArray;
-    uint256 giftsCount=0;
-      function createGift(string memory _title, string memory _description,uint256 _deadline,string memory _imageHash) external{
-       require(people.checkIsAUser(msg.sender)==true,"only user can create");
-       require(people.checkUserVerified(msg.sender)==true,"only user verified");
+    uint256 giftsCount = 0;
+
+    function createGift(
+        string memory _title,
+        string memory _description,
+        uint256 _deadline,
+        string memory _imageHash
+    ) external {
+        require(
+            people.checkIsAUser(msg.sender) == true,
+            "only user can create"
+        );
+        require(
+            people.checkUserVerified(msg.sender) == true,
+            "only user verified"
+        );
         MakeBetter storage gift = gifts[giftsCount];
 
         require(gift.deadline < block.timestamp, "invalid deadline");
 
-        gift.creator =msg.sender;
+        gift.creator = msg.sender;
         gift.title = _title;
         gift.description = _description;
         gift.deadline = _deadline;
         gift.amountCollected = 0;
         gift.imageHash = _imageHash;
         giftsArray.push(gift);
-         people.updateUserRating(msg.sender);
-
-      
+        people.updateUserRating(msg.sender);
     }
 
     function donateToBetterIndia(uint256 _id) public payable {
         uint256 amount = msg.value;
-         require(people.checkIsAUser(msg.sender)==true,"only user can donate");
-       
-         MakeBetter storage gift = gifts[_id];
+        require(
+            people.checkIsAUser(msg.sender) == true,
+            "only user can donate"
+        );
+
+        MakeBetter storage gift = gifts[_id];
 
         gift.donators.push(msg.sender);
-       
-        (bool sent,) = payable(gift.creator).call{value: amount}("");
 
-        if(sent) {
+        (bool sent, ) = payable(gift.creator).call{value: amount}("");
+
+        if (sent) {
             gift.amountCollected = gift.amountCollected + amount;
         }
-         people.updateUserRating(msg.sender);
+        people.updateUserRating(msg.sender);
     }
 
-    function getDonators(uint256 _id) view public returns (address[] memory) {
+    function getDonators(uint256 _id) public view returns (address[] memory) {
         return (gifts[_id].donators);
     }
-    function getGiftById(uint256 _id)external view returns(MakeBetter memory){
-           MakeBetter storage gift1 = gifts[_id];
+
+    function getGiftById(
+        uint256 _id
+    ) external view returns (MakeBetter memory) {
+        MakeBetter storage gift1 = gifts[_id];
         return gift1;
-
-
     }
+
     function getGifts() public view returns (MakeBetter[] memory) {
-       
         return giftsArray;
     }
-
 }
 error MinimumDepositAmountInvalid();
 error InsufficientFundToStartInsurance();
@@ -563,13 +657,14 @@ contract Insurance {
     event PaymentSuccess(uint256 pid);
     event RequestSuccess(uint256 pid, bool status);
     event MoneyReturned(uint256 pid, uint256 value, bool success);
-     KBRToken kbrtoken;
-     People people;
-    constructor(address ot,address ot1){
+    KBRToken kbrtoken;
+    People people;
+
+    constructor(address ot, address ot1) {
         kbrtoken = KBRToken(ot);
-        people=People(ot1);
+        people = People(ot1);
         owner = payable(msg.sender);
-         kbrtoken.mint(address(this), 30000000 * (10 ** kbrtoken.decimals()));
+        kbrtoken.mint(address(this), 30000000 * (10 ** kbrtoken.decimals()));
         kbrtoken.approve(address(this), 300000 * (10 ** kbrtoken.decimals()));
         kbrtoken.allowance(msg.sender, address(this));
     }
@@ -584,9 +679,15 @@ contract Insurance {
         string memory _insurance_type,
         uint256 _safe_fees
     ) external payable {
-        require(people.isAUser(msg.sender)==true,"invalid user");
-           require(people.checkUserVerified(msg.sender)==true,"only user verified");
-            require(people.checkUserBlacklisted(msg.sender)==false,"shouldnt be blacklisted");
+        require(people.isAUser(msg.sender) == true, "invalid user");
+        require(
+            people.checkUserVerified(msg.sender) == true,
+            "only user verified"
+        );
+        require(
+            people.checkUserBlacklisted(msg.sender) == false,
+            "shouldnt be blacklisted"
+        );
         if (msg.value < _safe_fees) revert InsufficientFundToStartInsurance();
 
         totalCountInvestments++;
@@ -612,12 +713,12 @@ contract Insurance {
         insurancescheme.totalamount = msg.value;
         investment_made[insurancescheme.creator].push(insurancescheme);
         insurances.push(insurancescheme);
-         kbrtoken.transferFrom(
-                address(this),
-                msg.sender,
-                5 * (10 ** kbrtoken.decimals())
-            );
-             people.updateUserRating(msg.sender);
+        kbrtoken.transferFrom(
+            address(this),
+            msg.sender,
+            5 * (10 ** kbrtoken.decimals())
+        );
+        people.updateUserRating(msg.sender);
         emit InsuranceAdded(
             insurancescheme.pid,
             insurancescheme.creator,
@@ -632,7 +733,7 @@ contract Insurance {
             insurancescheme.safe_fees
         );
     }
-     
+
     function addInsuranceToCategory(
         InsuranceSchemes storage insurancescheme
     ) internal {
@@ -670,7 +771,8 @@ contract Insurance {
             others_insurance_scheme_list[insurancescheme.pid] = insurancescheme;
         }
     }
-     function depositInitialAmount(uint256 _pid) external payable {
+
+    function depositInitialAmount(uint256 _pid) external payable {
         if (_pid > totalCountInvestments) revert NotAValidPid();
         InsuranceSchemes storage insurancescheme = insurance_scheme_list[_pid];
         if (insurancescheme.min_deposition_amount > msg.value)
@@ -686,18 +788,21 @@ contract Insurance {
             amountKept[_pid][msg.sender] = msg.value;
             insurancescheme.inverstorPid.push(msg.sender);
         }
-         kbrtoken.transferFrom(
-                address(this),
-                msg.sender,
-                2 * (10 ** kbrtoken.decimals())
-            );
-             people.updateUserRating(msg.sender);
+        kbrtoken.transferFrom(
+            address(this),
+            msg.sender,
+            2 * (10 ** kbrtoken.decimals())
+        );
+        people.updateUserRating(msg.sender);
         emit InitialDepositAmount(_pid, msg.value, success, data);
     }
 
     function depositMonthly(uint256 _pid) external payable {
-          require(people.isAUser(msg.sender)==true,"invalid user");
-           require(people.checkUserBlacklisted(msg.sender)==false,"shouldnt be blacklisted");
+        require(people.isAUser(msg.sender) == true, "invalid user");
+        require(
+            people.checkUserBlacklisted(msg.sender) == false,
+            "shouldnt be blacklisted"
+        );
         if (_pid > totalCountInvestments) revert NotAValidPid();
         InsuranceSchemes storage insurancescheme = insurance_scheme_list[_pid];
         if (msg.value < insurancescheme.deposit_amount_monthwise)
@@ -709,56 +814,58 @@ contract Insurance {
                 monthKept[_pid][msg.sender]++;
             }
         }
-         kbrtoken.transferFrom(
-                address(this),
-                msg.sender,
-                5 * (10 ** kbrtoken.decimals())
-            );
-             people.updateUserRating(msg.sender);
+        kbrtoken.transferFrom(
+            address(this),
+            msg.sender,
+            5 * (10 ** kbrtoken.decimals())
+        );
+        people.updateUserRating(msg.sender);
         emit PaymentSuccess(_pid);
     }
 
     function requestMoney(uint256 _pid) external {
-          require(people.isAUser(msg.sender)==true,"invalid user");
+        require(people.isAUser(msg.sender) == true, "invalid user");
         if (_pid > totalCountInvestments) revert NotAValidPid();
         requestPid[_pid][msg.sender] = true;
-    
+
         emit RequestSuccess(_pid, true);
     }
 
-    function payMoney(uint256 _pid,address _user,uint256 _amount) external payable {
-          require(people.isAUser(msg.sender)==true,"invalid user");
-           require(people.checkUserBlacklisted(_user)==false,"shouldnt be blacklisted");
+    function payMoney(
+        uint256 _pid,
+        address _user,
+        uint256 _amount
+    ) external payable {
+        require(people.isAUser(msg.sender) == true, "invalid user");
+        require(
+            people.checkUserBlacklisted(_user) == false,
+            "shouldnt be blacklisted"
+        );
         InsuranceSchemes storage insurancescheme = insurance_scheme_list[_pid];
-      
+
         if (_pid > totalCountInvestments) revert NotAValidPid();
         if (insurancescheme.creator != msg.sender)
             revert NotValidParticularPid();
-            uint256 x=(amountKept[_pid][_user]*4)/10;
-            require(_amount>=x,"invalid request");
-            require(_amount<=amountKept[_pid][_user],"invalid request");
-            if (requestPid[_pid][_user]==true) {
-                (bool success, ) = _user.call{
-                    value: _amount
-                }("");
-                if (success) {
-                   
-                    requestPid[_pid][_user] = false;
-                    amountKept[insurancescheme.pid][_user]-=x;
-                     kbrtoken.transferFrom(
-                address(this),
-                msg.sender,
-                5 * (10 ** kbrtoken.decimals())
-            );
-                }
-                
-             people.updateUserRating(msg.sender);
-                emit MoneyReturned(_pid, _amount, success);
+        uint256 x = (amountKept[_pid][_user] * 4) / 10;
+        require(_amount >= x, "invalid request");
+        require(_amount <= amountKept[_pid][_user], "invalid request");
+        if (requestPid[_pid][_user] == true) {
+            (bool success, ) = _user.call{value: _amount}("");
+            if (success) {
+                requestPid[_pid][_user] = false;
+                amountKept[insurancescheme.pid][_user] -= x;
+                kbrtoken.transferFrom(
+                    address(this),
+                    msg.sender,
+                    5 * (10 ** kbrtoken.decimals())
+                );
             }
-            
-        
-       
+
+            people.updateUserRating(msg.sender);
+            emit MoneyReturned(_pid, _amount, success);
+        }
     }
+
     function getInsurance(
         uint256 _pid
     ) external view returns (InsuranceSchemes memory) {
@@ -766,10 +873,9 @@ contract Insurance {
         return insurance_scheme_list[_pid];
     }
 
-
     function withdraw(uint256 _pid) external {
         InsuranceSchemes storage insurancescheme = insurance_scheme_list[_pid];
-          require(people.isAUser(msg.sender)==true,"invalid user");
+        require(people.isAUser(msg.sender) == true, "invalid user");
         if (insurancescheme.creator != msg.sender) revert InvalidCreator();
 
         require(
@@ -783,7 +889,6 @@ contract Insurance {
         require(success, "Transfer failed");
     }
 
-  
     function getAllInsurances()
         public
         view
@@ -798,89 +903,100 @@ contract Insurance {
         return investment_made[_address];
     }
 
-   
     function getInvestmentsBought(
         address _address
     ) external view returns (InsuranceSchemes[] memory) {
         return investment_bought[_address];
     }
 
-   
     fallback() external payable {}
 
     receive() external payable {}
 }
-contract MarketPlace{
+
+contract MarketPlace {
     address public immutable owner;
     KBRToken kbrtoken;
     People people;
-    constructor(address ot,address ot1){
-        kbrtoken=KBRToken(ot);
-        people=People(ot1);
-        owner=msg.sender;
+
+    constructor(address ot, address ot1) {
+        kbrtoken = KBRToken(ot);
+        people = People(ot1);
+        owner = msg.sender;
     }
-    struct Product{
+
+    struct Product {
         uint256 pid;
         string name;
         string imageHash;
         string description;
         uint256 price;
-       uint256 qty;
+        uint256 qty;
     }
-    mapping(uint256=>Product) public products;
-    Product[]productArray;
-    uint256 productCount=0;
-    function createProduct(string memory _name,string memory _imageHash,string memory _description,uint256 _price,uint256 _qty)external{
-        require(msg.sender==owner,"not owner");
+    mapping(uint256 => Product) public products;
+    Product[] productArray;
+    uint256 productCount = 0;
+
+    function createProduct(
+        string memory _name,
+        string memory _imageHash,
+        string memory _description,
+        uint256 _price,
+        uint256 _qty
+    ) external {
+        require(msg.sender == owner, "not owner");
         productCount++;
-        Product storage product=products[productCount];
-        product.pid=productCount;
-        product.name=_name;
-        product.imageHash=_imageHash;
-        product.description=_description;
-        product.price=_price;
-        product.qty=_qty;
+        Product storage product = products[productCount];
+        product.pid = productCount;
+        product.name = _name;
+        product.imageHash = _imageHash;
+        product.description = _description;
+        product.price = _price;
+        product.qty = _qty;
         productArray.push(product);
     }
-    function buy(uint256 _pid)external{
-        require(_pid<=productCount,"invalid pid");
-        require(people.isAUser(msg.sender)==true,"invalid user");
-         require(people.checkUserBlacklisted(msg.sender)==false,"shouldnt be blacklisted");
-        require(people.getBalance(msg.sender)>=(products[_pid].price*(10 ** kbrtoken.decimals())),"sorry invalid amt");
-          kbrtoken.transferFrom(
-                msg.sender,
-                address(this),
-                 products[_pid].price * (10 ** kbrtoken.decimals())
-            );
-             people.updateUserRating(msg.sender);
-            products[_pid].qty-=1;
+
+    function buy(uint256 _pid) external {
+        require(_pid <= productCount, "invalid pid");
+        require(people.isAUser(msg.sender) == true, "invalid user");
+        require(
+            people.checkUserBlacklisted(msg.sender) == false,
+            "shouldnt be blacklisted"
+        );
+        require(
+            people.getBalance(msg.sender) >=
+                (products[_pid].price * (10 ** kbrtoken.decimals())),
+            "sorry invalid amt"
+        );
+        kbrtoken.transferFrom(
+            msg.sender,
+            address(this),
+            products[_pid].price * (10 ** kbrtoken.decimals())
+        );
+        people.updateUserRating(msg.sender);
+        products[_pid].qty -= 1;
     }
-    function withdraw()external{
-     require(msg.sender==owner,"not owner");
-     uint256 x=people.getBalance(address(this));
-     kbrtoken.transferFrom(
-                address(this),
-                msg.sender,
-                x
-            );
+
+    function withdraw() external {
+        require(msg.sender == owner, "not owner");
+        uint256 x = people.getBalance(address(this));
+        kbrtoken.transferFrom(address(this), msg.sender, x);
     }
-    function updateStock(uint256 _pid,uint256 _qty)external{
-         require(msg.sender==owner,"not owner");
-          require(_pid<=productCount,"invalid pid");
-          products[_pid].qty+=_qty;
+
+    function updateStock(uint256 _pid, uint256 _qty) external {
+        require(msg.sender == owner, "not owner");
+        require(_pid <= productCount, "invalid pid");
+        products[_pid].qty += _qty;
     }
-    function getProductById(uint256 _id)external view returns(Product memory){
-           Product storage pdt = products[_id];
+
+    function getProductById(
+        uint256 _id
+    ) external view returns (Product memory) {
+        Product storage pdt = products[_id];
         return pdt;
-
-
     }
+
     function getProducts() public view returns (Product[] memory) {
-       
         return productArray;
     }
-} 
-
-
-
-
+}
