@@ -1,33 +1,33 @@
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react"
-import { IoCloudUploadOutline } from "react-icons/io5"
-import { MdLibraryAdd } from "react-icons/md"
+import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
+import { IoCloudUploadOutline } from "react-icons/io5";
+import { MdLibraryAdd } from "react-icons/md";
 
 const CreateRWA = () => {
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const [documentFile, setDocumentFile] = useState<File | null>(null)
-  const [price, setPrice] = useState<string>("")
-  const [location, setLocation] = useState<string>("")
-  const [size, setSize] = useState<string>("")
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const imageInputRef = useRef<HTMLInputElement | null>(null)
-  const documentInputRef = useRef<HTMLInputElement | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
+  const [price, setPrice] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [size, setSize] = useState<string>("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const documentInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setImageFile(e.target.files[0])
+      setImageFile(e.target.files[0]);
     }
-  }
+  };
 
   const handleDocumentChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setDocumentFile(e.target.files[0])
+      setDocumentFile(e.target.files[0]);
     }
-  }
+  };
 
   const renderFilePreview = () => {
-    if (!imageFile) return null
+    if (!imageFile) return null;
 
-    const fileURL = URL.createObjectURL(imageFile)
+    const fileURL = URL.createObjectURL(imageFile);
 
     if (imageFile.type.startsWith("image/")) {
       return (
@@ -39,25 +39,25 @@ const CreateRWA = () => {
           />
           <p className="text-gray-600 mt-2">{imageFile.name}</p>
         </div>
-      )
+      );
     }
-    return <p className="text-gray-600 mt-2">Unsupported file type</p>
-  }
+    return <p className="text-gray-600 mt-2">Unsupported file type</p>;
+  };
 
   const renderDocumentPreview = () => {
-    if (!documentFile) return null
+    if (!documentFile) return null;
 
     return (
       <div className="mt-4">
         <p className="text-gray-600">{documentFile.name}</p>
       </div>
-    )
-  }
+    );
+  };
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Handle form submission logic
-  }
+  };
 
   return (
     <div className="relative mt-20">
@@ -181,7 +181,7 @@ const CreateRWA = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateRWA
+export default CreateRWA;

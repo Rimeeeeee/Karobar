@@ -4,14 +4,16 @@ import { App } from "./App";
 import { ThirdwebProvider } from "thirdweb/react";
 import "./index.css";
 import { WagmiProvider } from "wagmi";
-
+import { KBRTokenContextProvider } from "./context/context";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThirdwebProvider>
-     
-      <App />
-   
+      <KBRTokenContextProvider>
+        <div className="no-scrollbar">
+          <App />
+        </div>
+      </KBRTokenContextProvider>
     </ThirdwebProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
