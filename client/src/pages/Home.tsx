@@ -1,20 +1,20 @@
-import React from "react"
-import { motion } from "framer-motion"
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa"
-import landing from "../landing.webp"
-import landing1 from "../landing1.webp"
-import landing2 from "../landing2.webp"
+import React from "react";
+import { motion } from "framer-motion";
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import landing from "../landing.webp";
+import landing1 from "../landing1.webp";
+import landing2 from "../landing2.webp";
 const Home = () => {
   const addKBR = async () => {
-    const tokenAddress = "0x1234567890abcdef1234567890abcdef12345678" // Custom token contract address
+    const tokenAddress = "0x1234567890abcdef1234567890abcdef12345678"; // Custom token contract address
 
     try {
-      await navigator.clipboard.writeText(tokenAddress)
-      console.log("Token address copied to clipboard!")
+      await navigator.clipboard.writeText(tokenAddress);
+      console.log("Token address copied to clipboard!");
     } catch (err) {
-      console.error("Failed to copy token address: ", err)
+      console.error("Failed to copy token address: ", err);
     }
-  }
+  };
 
   return (
     <div
@@ -268,7 +268,7 @@ const Home = () => {
         </div>
       </motion.footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
