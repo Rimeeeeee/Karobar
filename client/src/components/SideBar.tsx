@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
-import { MdHealthAndSafety } from "react-icons/md"
+import React, { useState, useEffect } from "react";
+import { MdHealthAndSafety } from "react-icons/md";
 import {
   FaHome,
   FaShoppingCart,
@@ -7,35 +7,37 @@ import {
   FaTimes,
   FaUserPlus,
   FaBuilding,
-} from "react-icons/fa"
-import { BiDonateHeart } from "react-icons/bi"
-import { NavLink } from "react-router-dom"
-import { MdSwapHorizontalCircle } from "react-icons/md"
+  FaUsers,
+  FaCalendarCheck,
+} from "react-icons/fa";
+import { BiDonateHeart } from "react-icons/bi";
+import { NavLink } from "react-router-dom";
+import { MdSwapHorizontalCircle } from "react-icons/md";
 
 const SideBar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(true)
-  const [user, setUser] = useState<any>(null)
-  const address = "0xAddressSample" // Mocked for example
+  const [isOpen, setIsOpen] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const address = "0xAddressSample"; // Mocked for example
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
 
   const sliceUserId = (userId: string) => {
     if (userId.length > 11) {
-      return `${userId.slice(0, 9)}...${userId.slice(-2)}`
+      return `${userId.slice(0, 9)}...${userId.slice(-2)}`;
     }
-    return userId
-  }
+    return userId;
+  };
 
   return (
     <div
-      className={`fixed h-screen ${isOpen ? "sm:w-64 w-56" : "w-0"} bg-zinc-950 text-white gap-4 flex flex-col transition-all duration-300 z-50`}
+      className={`fixed h-screen ${isOpen ? "sm:w-64 w-56" : "w-0"} bg-zinc-950 text-white gap-3 flex flex-col transition-all duration-300 z-50`}
     >
       <div className="flex flex-col mr-12">
         {/* Header with profile */}
         <div
-          className={`p-1 text-2xl font-semibold flex flex-col items-center ${!isOpen && "hidden"}`}
+          className={`p-1 text-lg font-semibold flex flex-col items-center ${!isOpen && "hidden"}`}
         >
           {user ? (
             <NavLink
@@ -72,10 +74,10 @@ const SideBar: React.FC = () => {
         </div>
         {/* Navigation links */}
         <div
-          className={`flex flex-col space-y-3 md:space-y-5 text-base md:text-lg gap-2 p-4 ${!isOpen && "hidden"}`}
+          className={`flex flex-col space-y-3 md:space-y-4 text-base md:text-lg gap-2 p-4 ${!isOpen && "hidden"}`}
         >
           <NavLink
-            to="/register"
+            to="/login"
             className={({ isActive }) =>
               isActive
                 ? "flex items-center space-x-2 p-2 text-blue-500"
@@ -95,6 +97,28 @@ const SideBar: React.FC = () => {
           >
             <FaHome className="text-xl" />
             <span>Home</span>
+          </NavLink>
+          <NavLink
+            to="/dailylogin"
+            className={({ isActive }) =>
+              isActive
+                ? "flex group items-center space-x-2 p-2 bg-blue-500 rounded-md"
+                : "flex items-center space-x-2 p-2 hover:bg-blue-500 rounded-md"
+            }
+          >
+            <FaCalendarCheck className="text-xl group-hover:text-white" />
+            <span className="group-hover:text-white">Daily Check-in</span>
+          </NavLink>
+          <NavLink
+            to="/people"
+            className={({ isActive }) =>
+              isActive
+                ? "flex items-center space-x-2 p-2 bg-blue-500 rounded-md"
+                : "flex items-center space-x-2 p-2 hover:bg-blue-500 rounded-md"
+            }
+          >
+            <FaUsers className="text-xl" />
+            <span>People</span>
           </NavLink>
           <NavLink
             to="/swap"
@@ -162,7 +186,7 @@ const SideBar: React.FC = () => {
         </button>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SideBar
+export default SideBar;

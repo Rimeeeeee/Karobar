@@ -4,6 +4,7 @@ import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import landing from "../landing.webp";
 import landing1 from "../landing1.webp";
 import landing2 from "../landing2.webp";
+import { NavLink } from "react-router-dom";
 const Home = () => {
   const addKBR = async () => {
     const tokenAddress = "0x1234567890abcdef1234567890abcdef12345678"; // Custom token contract address
@@ -64,9 +65,12 @@ const Home = () => {
               Add KBR to Wallet
             </button>
           </div>
-          <button className="w-full md:w-64 px-2 md:px-2 py-0 md:py-0 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all">
+          <NavLink
+            to="/login"
+            className="w-full md:w-64 flex items-center justify-center px-2 md:px-2 py-0 md:py-0 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all text-center"
+          >
             Register
-          </button>
+          </NavLink>
         </motion.div>
 
         {/* Additional Information */}
