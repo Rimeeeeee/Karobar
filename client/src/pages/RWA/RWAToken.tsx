@@ -24,7 +24,7 @@ const RWAToken: React.FC<RWATokenProps> = ({
     <div
       className={
         `rounded-lg shadow-lg p-4 border-4 bg-zinc-950 w-full max-w-sm ` +
-        (onSale ? `border-teal-600` : `border-red-600`)
+        (onSale ? border-teal-600 : border-red-600)
       }
     >
       {/* Image with object-fit to cover */}

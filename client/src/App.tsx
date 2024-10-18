@@ -13,6 +13,8 @@ import MyCampaign from "./pages/MyCampaign";
 import Login from "./pages/Login";
 import DailyLogin from "./pages/DailyLogin";
 import People from "./pages/People";
+import ViewProfile from "./pages/ViewPage";
+
 
 export function App() {
   return (
@@ -41,6 +43,14 @@ export function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/dailylogin" element={<DailyLogin />} />
               <Route path="/people" element={<People />} />
+              <Route
+            path="/profile/:userId"
+            element={
+              
+                <ViewProfile />
+            
+            }
+          />
               {/* Add additional routes as needed */}
             </Routes>
           </main>

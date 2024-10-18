@@ -1,9 +1,9 @@
-import React from "react";
+import React from "react"
 
 interface UserProps {
-  profilePic?: string;
-  name?: string;
-  userId?: string;
+  profilePic?: string
+  name?: string
+  userId?: string
 }
 //need to make it a navlink for future navigation to the profile
 const User: React.FC<UserProps> = ({ profilePic, name, userId }) => {
@@ -12,8 +12,7 @@ const User: React.FC<UserProps> = ({ profilePic, name, userId }) => {
       {/* Profile Picture */}
       <img
         src={profilePic}
-        alt={name}
-        // onError={handleImageError}
+        alt="Profile"
         className="sm:w-16 sm:h-16 w-12 h-12 rounded-full border-2 border-gray-600"
       />
       <div className="ml-2 sm:ml-4 text-white">
@@ -23,7 +22,7 @@ const User: React.FC<UserProps> = ({ profilePic, name, userId }) => {
         <p className="text-gray-400 text-sm">@{userId}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default User;
+export default User
