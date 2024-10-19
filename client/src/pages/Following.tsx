@@ -35,6 +35,7 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
               contract,
               method:
                 "function getUserById(address _user) view returns ((uint256 uid, address userid, string name, string bio, string image_hash, string caption, uint256 dailycheckin, uint256[] dailycheckins, address[] followers, address[] following, uint256 token, bool blacklisted, uint256 userRating, bool verifiedUser))",
+
               params: [followingAddress],
             });
 
@@ -105,4 +106,6 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
   );
 };
 
+
 export default FollowingPage;
+

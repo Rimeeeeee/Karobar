@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import RWAToken from "./RWAToken"; // Import RWAToken component
 import { readContract } from "thirdweb";
@@ -41,7 +42,9 @@ const MyRWA: React.FC = () => {
 
   console.log(nfts);
 
+
   return (
+
     <div className="h-screen p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4 overflow-y-auto no-scrollbar mt-12">
         {nfts.filter((nft) => nft.seller === address).map((nft, index) => (
@@ -59,8 +62,11 @@ const MyRWA: React.FC = () => {
           />
         ))}
       </div>
+
     </div>
   );
 };
 
+
 export default MyRWA;
+
