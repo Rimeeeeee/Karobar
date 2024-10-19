@@ -543,7 +543,7 @@ contract BetterIndia {
         );
         MakeBetter storage gift = gifts[giftsCount];
 
-        require(gift.deadline < block.timestamp, "invalid deadline");
+        
 
         gift.creator = msg.sender;
         gift.title = _title;

@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react"
-import { NavLink } from "react-router-dom"
-import Campaign from "../components/Campaign"
-import { useKBRTokenContext } from "../context/context"
-import { readContract } from "thirdweb"
-import { download } from "thirdweb/storage"
+import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import Campaign from "../components/Campaign";
+import { useKBRTokenContext } from "../context/context";
+import { readContract } from "thirdweb";
+import { download } from "thirdweb/storage";
 
 const Charity = () => {
-  const [campaigns, setCampaigns] = useState<any[]>([])
-  const { BetterIndia, client } = useKBRTokenContext()
-  const [loading, setLoading] = useState<boolean>(true)
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const { BetterIndia, client } = useKBRTokenContext();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleDonate = (amount: number) => {
-    console.log(`Donated ${amount} ETH`)
-  }
+    console.log(`Donated ${amount} ETH`);
+  };
 
   useEffect(() => {
     const getAllCampaigns = async () => {
@@ -22,9 +22,9 @@ const Charity = () => {
           method:
             "function getGifts() view returns ((string title, string description, string imageHash, address creator, uint256 deadline, uint256 amountCollected, address[] donators)[])",
           params: [],
-        })
+        });
 
-        console.log("Campaign Data:", campaignData)
+        console.log("Campaign Data:", campaignData);
 
         const campaignsWithImages = await Promise.all(
           campaignData.map(async (campaign: any) => {
@@ -32,36 +32,36 @@ const Charity = () => {
               const response = await download({
                 client,
                 uri: campaign.imageHash, // Using the IPFS URI format
-              })
-              const fileBlob = await response.blob()
-              const fileUrl = URL.createObjectURL(fileBlob)
-              return { ...campaign, imageHash: fileUrl }
+              });
+              const fileBlob = await response.blob();
+              const fileUrl = URL.createObjectURL(fileBlob);
+              return { ...campaign, imageHash: fileUrl };
             }
             // Return campaign data without modifying the image if imageHash is not present
-            return campaign
-          }),
-        )
+            return campaign;
+          })
+        );
 
-        setCampaigns(Array.from(campaignsWithImages))
-        setLoading(false) // Set loading to false after successful fetch
+        setCampaigns(Array.from(campaignsWithImages));
+        setLoading(false); // Set loading to false after successful fetch
       } catch (error: any) {
-        console.error("Error fetching Campaigns", error)
-        setLoading(false)
+        console.error("Error fetching Campaigns", error);
+        setLoading(false);
       }
-    }
+    };
 
-    getAllCampaigns()
-  }, [BetterIndia, client])
+    getAllCampaigns();
+  }, [BetterIndia, client]);
 
   if (loading) {
-    return <p className="text-white">Loading Campaigns...</p>
+    return <p className="text-white">Loading Campaigns...</p>;
   }
 
   if (!campaigns.length) {
-    return <p className="text-white">No Campaigns currently available.</p>
+    return <p className="text-white">No Campaigns currently available.</p>;
   }
 
-  console.log(campaigns)
+  console.log(campaigns);
 
   return (
     <div className="mt-20">
@@ -97,7 +97,7 @@ const Charity = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Charity
+export default Charity;
