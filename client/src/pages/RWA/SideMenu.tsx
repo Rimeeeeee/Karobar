@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import { NavLink } from "react-router-dom"
-import { FaShoppingCart, FaUserCircle, FaPlusCircle } from "react-icons/fa"
-import { MdMenu } from "react-icons/md" // Material Design icons
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { FaShoppingCart, FaUserCircle, FaPlusCircle } from "react-icons/fa";
+import { MdMenu } from "react-icons/md"; // Material Design icons
 
 const SideMenu: React.FC = () => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <div
@@ -68,7 +68,7 @@ const SideMenu: React.FC = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SideMenu
+export default SideMenu;

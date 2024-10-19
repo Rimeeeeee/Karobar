@@ -5,6 +5,7 @@ import { download } from "thirdweb/storage";
 import { useActiveAccount } from "thirdweb/react";
 import { createWallet } from "thirdweb/wallets";
 import { ethers } from "ethers";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 
 interface NFTProps {
   papers: boolean; // Or the correct type for papers (e.g., boolean, string)
@@ -100,11 +101,17 @@ const RWAToken: React.FC<NFTProps> = ({
         <img src={image} alt={`NFT`} className="w-full rounded-md" />
       </div>
       <div className="flex items-center mb-4 mt-2 border-y-2 p-2 border-white">
-        <div className="ml-4">
-          <h2 className="text-lg font-semibold">{creatorAddress.slice(0, 6) + "..." + creatorAddress.slice(-4)}</h2>
-          <p className="text-sm text-gray-400">
-            {sellerAddress.slice(0, 6) + "..." + sellerAddress.slice(-4)}
-          </p>
+        <div className="ml-4 flex">
+          {/* Verified Tick Icon */}
+          <span className="flex items-center flex-col">
+            <span className="flex items-center flex-row">
+              <AiOutlineCheckCircle className="text-green-500 mr-1" /> Owner
+              Verified
+            </span>
+            <p className="text-lg text-gray-100 mt-2">
+              {sellerAddress.slice(0, 8) + "..." + sellerAddress.slice(-6)}
+            </p>
+          </span>
         </div>
       </div>
       <div className="mb-2">
@@ -120,7 +127,7 @@ const RWAToken: React.FC<NFTProps> = ({
           <h3 className="text-xl font-bold">Price:</h3>
           <p className="text-xl font-bold text-blue-400">
             {" "}
-            {ethers.formatEther(price.toString())}ETH
+            {ethers.formatEther(price.toString())} ETH
           </p>
         </div>
         {sellerAddress !== activeAccountAddress && (

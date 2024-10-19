@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from "react"
-import HALO from "vanta/dist/vanta.halo.min"
+import React, { useState, useEffect, useRef } from "react";
+import HALO from "vanta/dist/vanta.halo.min";
 
 const Vanta = () => {
-  const [vantaEffect, setVantaEffect] = useState(null)
-  const myRef = useRef(null)
+  const [vantaEffect, setVantaEffect] = useState(null);
+  const myRef = useRef(null);
 
   useEffect(() => {
     if (!vantaEffect) {
@@ -23,12 +23,12 @@ const Vanta = () => {
           yOffset: 0.0,
           size: 1.4,
         }),
-      )
+      );
     }
     return () => {
       //   if (vantaEffect) vantaEffect.destroy()
-    }
-  }, [vantaEffect])
+    };
+  }, [vantaEffect]);
 
   return (
     <div
@@ -36,7 +36,7 @@ const Vanta = () => {
       style={{ width: "100%", height: "100vh" }}
       className="z-0"
     ></div>
-  )
-}
+  );
+};
 
-export default Vanta
+export default Vanta;

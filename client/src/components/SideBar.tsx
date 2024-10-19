@@ -74,7 +74,7 @@ const SideBar: React.FC = () => {
         </div>
         {/* Navigation links */}
         <div
-          className={`flex flex-col space-y-3 md:space-y-4 text-base md:text-lg gap-2 p-4 ${!isOpen && "hidden"}`}
+          className={`flex flex-col space-y-2 md:space-y-3 text-base md:text-lg gap-2 p-4 ${!isOpen && "hidden"}`}
         >
           <NavLink
             to="/login"

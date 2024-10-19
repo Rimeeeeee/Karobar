@@ -16,50 +16,50 @@ const FollowersPage: React.FC<{ contract: any }> = ({ contract }) => {
   const [error, setError] = useState<string | null>(null);
   const { client } = useKBRTokenContext();
   useEffect(() => {
-    // const fetchFollowers = async () => {
-    //   if (!creatorAddress) return;
-    //   try {
-    //     // Fetch follower addresses
-    //     const response = await readContract({
-    //       contract,
-    //       method:
-    //         "function getFollowers(address _creator) view returns (address[])",
-    //       params: [creatorAddress],
-    //     });
-    //     // Fetch detailed info for each follower
-    //     const followersData = await Promise.all(
-    //       response.map(async (followerAddress: string) => {
-    //         console.log(followerAddress);
-    //         const userInfo = await readContract({
-    //           contract,
-    //           method:
-    //             "function getUserById(address _user) view returns ((uint256 uid, address userid, string name, string bio, string image_hash, string caption, uint256 dailylikes, uint256 dailyshares, uint256 dailycheckin, uint256[] dailycheckins, uint256[] dailylikestamp, uint256[] dailysharestamp, uint256[] pid, address[] followers, address[] following, (uint256 pid, address creator, string image_hash, string title, string description, string videos, uint256 likes, uint256 shares, string tags)[] content, uint256 token))",
-    //           params: [followerAddress],
-    //         });
-    //         console.log(userInfo);
-    //         console.log("userInfo");
-    //         // Fetch image using the IPFS URI and convert to a blob URL
-    //         // const response = await download({
-    //         ///   client: client,
-    //         //   uri: `${userInfo.image_hash}`, // Using the IPFS URI format
-    //         // });
-    //         // const fileBlob = await response.blob();
-    //         // const imageUrl = URL.createObjectURL(fileBlob);
-    //         return {
-    //           address: userInfo.userid,
-    //           name: userInfo.name,
-    //           image_url: "imageUrl",
-    //         };
-    //       }),
-    //     );
-    //     setFollowers(followersData);
-    //     setLoading(false);
-    //   } catch (error: any) {
-    //     setError(error.message);
-    //     setLoading(false);
-    //   }
-    // };
-    // fetchFollowers();
+    const fetchFollowers = async () => {
+      if (!creatorAddress) return;
+      try {
+        // Fetch follower addresses
+        const response = await readContract({
+          contract,
+          method:
+            "function getFollowers(address _creator) view returns (address[])",
+          params: [creatorAddress],
+        });
+        // Fetch detailed info for each follower
+        const followersData = await Promise.all(
+          response.map(async (followerAddress: string) => {
+            console.log(followerAddress);
+            const userInfo = await readContract({
+              contract,
+              method:
+                "function getUserById(address _user) view returns ((uint256 uid, address userid, string name, string bio, string image_hash, string caption, uint256 dailylikes, uint256 dailyshares, uint256 dailycheckin, uint256[] dailycheckins, uint256[] dailylikestamp, uint256[] dailysharestamp, uint256[] pid, address[] followers, address[] following, (uint256 pid, address creator, string image_hash, string title, string description, string videos, uint256 likes, uint256 shares, string tags)[] content, uint256 token))",
+              params: [followerAddress],
+            });
+            console.log(userInfo);
+            console.log("userInfo");
+            // Fetch image using the IPFS URI and convert to a blob URL
+            // const response = await download({
+            ///   client: client,
+            //   uri: `${userInfo.image_hash}`, // Using the IPFS URI format
+            // });
+            // const fileBlob = await response.blob();
+            // const imageUrl = URL.createObjectURL(fileBlob);
+            return {
+              address: userInfo.userid,
+              name: userInfo.name,
+              image_url: "imageUrl",
+            };
+          }),
+        );
+        setFollowers(followersData);
+        setLoading(false);
+      } catch (error: any) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+    fetchFollowers();
   }, [contract, creatorAddress]);
 
   return (

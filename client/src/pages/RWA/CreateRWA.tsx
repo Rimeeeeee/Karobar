@@ -5,6 +5,7 @@ import { prepareContractCall, sendTransaction } from "thirdweb";
 import { upload } from "thirdweb/storage";
 import { useKBRTokenContext } from "../../context/context";
 import { ethers } from "ethers";
+import Vanta from "../../components/Vanta";
 
 const CreateRWA: React.FC = () => {
   const [formState, setFormState] = useState({
@@ -151,6 +152,10 @@ const CreateRWA: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center h-[85vh] bg-transparent text-white p-4">
+      {" "}
+      <div className="absolute top-0 left-0 w-full h-full z-0 flex items-center justify-center">
+        <Vanta />
+      </div>
       <div className="bg-transparent z-10 hover:bg-zinc-900 mr-10 bg-opacity-100 border-white border-2 p-4 md:p-8 rounded-lg shadow-lg max-w-sm md:max-w-2xl lg:max-w-3xl">
         <h2 className="text-2xl font-bold mb-6 text-center">
           Create Your Property Token

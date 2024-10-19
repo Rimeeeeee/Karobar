@@ -968,6 +968,10 @@ contract MarketPlace {
                 (products[_pid].price * (10 ** kbrtoken.decimals())),
             "sorry invalid amt"
         );
+
+         kbroken.approve(address(this), products[_pid].price * (10 ** kbrtoken.decimals());
+        // icsToken.transferFrom(msg.sender, address, b);
+
         kbrtoken.transferFrom(
             msg.sender,
             address(this),

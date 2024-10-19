@@ -5,6 +5,7 @@ import MyRWA from "./RWA/MyRWA";
 import CreateRWA from "./RWA/CreateRWA";
 import SideMenu from "./RWA/SideMenu";
 import landing from "../landing.webp"; // Importing the background image
+import Rings from "../components/Rings";
 import Vanta from "../components/Vanta";
 
 const RWA: React.FC = () => {
@@ -16,7 +17,7 @@ const RWA: React.FC = () => {
   return (
     <div className="flex h-screen relative">
       {isRWARoute && (
-        <div className="absolute top-0 left-0 w-full h-full z-0">
+        <div className="absolute top-0 left-0 w-full h-full z-0 flex items-center justify-center">
           <Vanta />
         </div>
       )}
