@@ -33,8 +33,8 @@ const Vanta = () => {
   return (
     <div
       ref={myRef}
-      style={{ width: "100%", height: "60vh" }}
-      className="z-10"
+      style={{ width: "100%", height: "100vh" }}
+      className="z-0"
     ></div>
   )
 }

@@ -11,7 +11,7 @@ const SideMenu: React.FC = () => {
       className={
         open
           ? `z-40 fixed inset-0 bg-gray-800 bg-opacity-25 flex items-center justify-end`
-          : `fixed inset-0 z-0 flex items-center justify-end`
+          : `fixed inset-0 z-10 flex items-center justify-end`
       }
     >
       {/* Menu Toggle Button */}

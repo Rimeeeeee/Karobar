@@ -18,6 +18,7 @@ import FollowingPage from "./pages/Following";
 import { useKBRTokenContext } from "./context/context";
 
 import FollowersPage from "./pages/Follower";
+import CreateCampaign from "./pages/CreateCampaign";
 
 export function App() {
   const { PeopleContract } = useKBRTokenContext();
@@ -44,6 +45,7 @@ export function App() {
               <Route path="/rwa/*" element={<RWA />} />
               <Route path="/donate" element={<Charity />} />
               <Route path="/mycampaigns" element={<MyCampaign />} />
+              <Route path="/createcampaigns" element={<CreateCampaign/>} />
               <Route path="/login" element={<Login />} />
               <Route path="/dailylogin" element={<DailyLogin />} />
               <Route path="/people" element={<People />} />

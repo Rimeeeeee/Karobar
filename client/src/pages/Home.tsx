@@ -25,8 +25,13 @@ const Home = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
+       // width: "calc(100vw + 300px)", // Adjust as needed 
+       // marginLeft: "-120px", // Adjust to ensure no empty space
+
       }}
+     
     >
+      
       {/* Hero Section */}
       <motion.section
         className="min-h-screen flex flex-col items-center justify-center bg-black bg-opacity-50 text-center p-4 md:p-8"

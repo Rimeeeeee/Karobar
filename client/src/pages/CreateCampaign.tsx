@@ -1,194 +1,180 @@
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react"
-import { IoCloudUploadOutline } from "react-icons/io5"
-import { MdLibraryAdd } from "react-icons/md"
+import React, { useState, useEffect } from "react";
+import { useActiveAccount } from "thirdweb/react";
+import { createWallet } from "thirdweb/wallets";
+import { prepareContractCall, sendTransaction } from "thirdweb";
+import { upload } from "thirdweb/storage";
+import Vanta from "../components/Vanta";
+import { useKBRTokenContext } from "../context/context";
 
 const CreateCampaign = () => {
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const [title, setTitle] = useState<string>("")
-  const [description, setDescription] = useState<string>("")
-  const [ownerName, setOwnerName] = useState<string>("")
-  const [ownerAddress, setOwnerAddress] = useState<string>("")
-  const [ownerProfile, setOwnerProfile] = useState<string>("")
-  const [deadline, setDeadline] = useState<string>("")
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const imageInputRef = useRef<HTMLInputElement | null>(null)
+  const [formState, setFormState] = useState({
+    title: "",
+    description: "",
+    deadline: "",
+    imageHash: "",
+  });
+  const [createCampaignSuccess, setCreateCampaignSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { BetterIndia, client } = useKBRTokenContext();
+  const address = useActiveAccount()?.address;
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImageFile(e.target.files[0])
+  const handleCampaignCreation = async () => {
+    try {
+      if (
+        formState.title &&
+        formState.description &&
+        formState.deadline &&
+        formState.imageHash
+      ) {
+        const wallet = createWallet("io.metamask");
+        const connectedAccount = await wallet.connect({ client });
+
+        const transaction = await prepareContractCall({
+          contract: BetterIndia,
+          method:
+            "function createGift(string _title, string _description, uint256 _deadline, string _imageHash)",
+          params: [
+            formState.title,
+            formState.description,
+            BigInt(formState.deadline),
+            formState.imageHash,
+          ],
+        });
+       console.log( BigInt(new Date(formState.deadline).getTime()));
+        const { transactionHash } = await sendTransaction({
+          transaction,
+          account: connectedAccount,
+        });
+
+        if (transactionHash) {
+          setCreateCampaignSuccess(true);
+          alert("Campaign created successfully");
+          setTimeout(() => setCreateCampaignSuccess(false), 3000);
+          setFormState({
+            title: "",
+            description: "",
+            deadline: "",
+            imageHash: "",
+          });
+        }
+      } else {
+        setError("Please fill all fields correctly.");
+      }
+    } catch (err) {
+      console.error("Error creating campaign:", err);
+      setError("Failed to create campaign.");
     }
-  }
+  };
 
-  const renderFilePreview = () => {
-    if (!imageFile) return null
-
-    const fileURL = URL.createObjectURL(imageFile)
-
-    if (imageFile.type.startsWith("image/")) {
-      return (
-        <div className="mt-4">
-          <img
-            src={fileURL}
-            alt="Preview"
-            className="max-w-full h-auto border border-gray-300 rounded-md"
-          />
-          <p className="text-gray-600 mt-2">{imageFile.name}</p>
-        </div>
-      )
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(timer);
     }
-    return <p className="text-gray-600 mt-2">Unsupported file type</p>
-  }
+  }, [error]);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    // Handle form submission logic
-  }
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      try {
+        const uris = await upload({
+          client,
+          files: [file],
+        });
+        setFormState((prevState) => ({
+          ...prevState,
+          imageHash: uris, // Set the first URI
+        }));
+      } catch (error) {
+        console.error("Error uploading file to IPFS:", error);
+      }
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleCampaignCreation();
+  };
 
   return (
-    <div className="relative mt-20">
-      <div className="relative max-w-md mx-auto mr-5 sm:mr-0 p-2 bg-black bg-opacity-30 border-2 border-white rounded-lg sm:p-6 h-full overflow-y-auto scrollbar-hidden">
-        <h1 className="my-2 text-xl font-extrabold text-white flex flex-row gap-2 sm:text-3xl">
-          <MdLibraryAdd className="mt-1" />
-          List your Property on Chain!!
-        </h1>
+    <div className="h-screen flex items-center justify-center bg-transparent text-white">
+      <Vanta/>
+      <div className="bg-transparent hover:bg-zinc-900 bg-opacity-100 border-white border-2 p-4 md:p-8 rounded-lg shadow-lg max-w-sm md:max-w-2xl lg:max-w-3xl">
+        <h2 className="text-2xl font-bold mb-6 text-center">Create Your Gift!</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col">
+            <label htmlFor="title" className="text-sm font-medium">Title:</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              placeholder="Enter title for your campaign"
+              value={formState.title}
+              onChange={handleChange}
+              className="mt-1 p-2 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-        {/* Title Input */}
-        <div className="mb-4">
-          <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-            Title
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setTitle(e.target.value)
-            }
-            className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-            placeholder="Enter title"
-          />
-          {errors.title && <p className="text-red-500 mt-2">{errors.title}</p>}
-        </div>
+          <div className="flex flex-col">
+            <label htmlFor="description" className="text-sm font-medium">Description:</label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              placeholder="Enter a description for viewers"
+              value={formState.description}
+              onChange={handleChange}
+              className="mt-1 p-2 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-        {/* Image Upload Input */}
-        <div className="mb-4">
-          <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-            Upload Image
-          </label>
-          <input
-            type="file"
-            ref={imageInputRef}
-            onChange={handleImageChange}
-            accept="image/*"
-            className="mt-1 w-full border border-gray-800 bg-zinc-950 text-white rounded-lg file:py-2 file:px-4 file:border-0 file:text-white file:bg-blue-600 hover:file:bg-blue-700"
-          />
-          {errors.image && <p className="text-red-500 mt-2">{errors.image}</p>}
-          {renderFilePreview()}
-        </div>
+          <div className="flex flex-col">
+            <label htmlFor="deadline" className="text-sm font-medium">Deadline:</label>
+            <input
+              type="text"
+              id="deadline"
+              name="deadline"
+              placeholder="Deadline should be in future(in months)"
+              value={formState.deadline}
+              onChange={handleChange}
+              className="mt-1 p-2 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-        {/* Description Input */}
-        <div className="mb-4">
-          <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setDescription(e.target.value)
-            }
-            className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-            placeholder="Enter description"
-          />
-          {errors.description && (
-            <p className="text-red-500 mt-2">{errors.description}</p>
-          )}
-        </div>
+          <div className="flex flex-col">
+            <label htmlFor="imageHash" className="text-sm font-medium">Campaign Picture:</label>
+            <input
+              type="file"
+              id="imageHash"
+              name="imageHash"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="mt-1 border border-gray-800 bg-zinc-950 text-white rounded-lg file:py-2 file:px-4 file:border-0 file:text-white file:bg-blue-600 hover:file:bg-blue-700"
+            />
+          </div>
 
-        {/* Owner Name Input */}
-        <div className="mb-4">
-          <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-            Owner Name
-          </label>
-          <input
-            type="text"
-            value={ownerName}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setOwnerName(e.target.value)
-            }
-            className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-            placeholder="Enter owner name"
-          />
-          {errors.ownerName && (
-            <p className="text-red-500 mt-2">{errors.ownerName}</p>
-          )}
-        </div>
-
-        {/* Owner Address Input */}
-        <div className="mb-4">
-          <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-            Owner Address
-          </label>
-          <input
-            type="text"
-            value={ownerAddress}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setOwnerAddress(e.target.value)
-            }
-            className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-            placeholder="Enter owner address"
-          />
-          {errors.ownerAddress && (
-            <p className="text-red-500 mt-2">{errors.ownerAddress}</p>
-          )}
-        </div>
-
-        {/* Owner Profile Input */}
-        <div className="mb-4">
-          <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-            Owner Profile
-          </label>
-          <input
-            type="text"
-            value={ownerProfile}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setOwnerProfile(e.target.value)
-            }
-            className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-            placeholder="Enter owner profile link"
-          />
-          {errors.ownerProfile && (
-            <p className="text-red-500 mt-2">{errors.ownerProfile}</p>
-          )}
-        </div>
-
-        {/* Deadline Input */}
-        <div className="mb-4">
-          <label className="block text-gray-300 mb-2 text-sm sm:text-base">
-            Deadline
-          </label>
-          <input
-            type="date"
-            value={deadline}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setDeadline(e.target.value)
-            }
-            className="w-full border border-gray-800 text-black rounded-md p-2 text-sm sm:text-base"
-          />
-          {errors.deadline && (
-            <p className="text-red-500 mt-2">{errors.deadline}</p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded-md font-bold hover:bg-blue-700 w-full flex justify-center text-sm sm:text-base"
-          onClick={handleSubmit}
-        >
-          <IoCloudUploadOutline className="text-xl sm:text-2xl mx-2 font-bold" />
-          Create
-        </button>
+          <button
+            type="submit"
+            className="mt-8 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 w-full"
+          >
+            Create Campaign
+          </button>
+        </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateCampaign
+export default CreateCampaign;

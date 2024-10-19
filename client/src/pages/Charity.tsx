@@ -1,48 +1,67 @@
-import React, { useState } from "react"
-import { NavLink } from "react-router-dom"
-import Campaign from "../components/Campaign"
+import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import Campaign from "../components/Campaign";
+import { useKBRTokenContext } from "../context/context";
+import { readContract } from "thirdweb";
+import { download } from "thirdweb/storage";
 
 const Charity = () => {
-  const [campaigns, setCampaigns] = useState([
-    {
-      title: "Support Our Education Campaign",
-      image: "https://example.com/image1.jpg",
-      description:
-        "Help provide education resources to underprivileged children.",
-      ownerName: "Jane Doe",
-      ownerAddress: "0x1234...abcd",
-      ownerProfile: "https://example.com/profile1",
-      deadline: "Dec 31, 2024",
-    },
-    {
-      title: "Clean Water Initiative",
-      image: "https://example.com/image2.jpg",
-      description:
-        "Your donation helps provide clean drinking water to rural areas.",
-      ownerName: "John Smith",
-      ownerAddress: "0x5678...efgh",
-      ownerProfile: "https://example.com/profile2",
-      deadline: "Nov 15, 2024",
-    },
-    {
-      title: "Healthcare for All",
-      image: "https://example.com/image3.jpg",
-      description: "Join us in providing healthcare services to those in need.",
-      ownerName: "Sarah Lee",
-      ownerAddress: "0x9101...ijkl",
-      ownerProfile: "https://example.com/profile3",
-      deadline: "Jan 20, 2025",
-    },
-  ])
-
-  const handleCreateCampaign = () => {
-    // Implement logic for creating a new campaign (e.g., open a form modal)
-    alert("Create new campaign feature coming soon!")
-  }
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const { BetterIndia, client } = useKBRTokenContext();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleDonate = (amount: number) => {
-    console.log(`Donated ${amount} ETH`)
+    console.log(`Donated ${amount} ETH`);
+  };
+
+  useEffect(() => {
+    const getAllCampaigns = async () => {
+      try {
+        const campaignData = await readContract({
+          contract: BetterIndia,
+          method:
+            "function getGifts() view returns ((string title, string description, string imageHash, address creator, uint256 deadline, uint256 amountCollected, address[] donators)[])",
+          params: [],
+        });
+
+        console.log("Campaign Data:", campaignData);
+
+        const campaignsWithImages = await Promise.all(
+          campaignData.map(async (campaign: any) => {
+            if (campaign.imageHash) {
+              const response = await download({
+                client,
+                uri: campaign.imageHash, // Using the IPFS URI format
+              });
+              const fileBlob = await response.blob();
+              const fileUrl = URL.createObjectURL(fileBlob);
+              return { ...campaign, imageHash: fileUrl };
+            }
+            // Return campaign data without modifying the image if imageHash is not present
+            return campaign;
+          })
+        );
+
+        setCampaigns(Array.from(campaignsWithImages));
+        setLoading(false); // Set loading to false after successful fetch
+      } catch (error: any) {
+        console.error("Error fetching Campaigns", error);
+        setLoading(false);
+      }
+    };
+
+    getAllCampaigns();
+  }, [BetterIndia, client]);
+
+  if (loading) {
+    return <p className="text-white">Loading Campaigns...</p>;
   }
+
+  if (!campaigns.length) {
+    return <p className="text-white">No Campaigns currently available.</p>;
+  }
+
+  console.log(campaigns);
 
   return (
     <div className="mt-20">
@@ -65,20 +84,20 @@ const Charity = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-10 m-1">
         {campaigns.map((campaign, index) => (
           <Campaign
-            key={index}
+            campaignId={index}
             title={campaign.title}
-            image={campaign.image}
+            image={campaign.imageHash} // If imageHash is not present, it'll handle it
             description={campaign.description}
-            ownerName={campaign.ownerName}
-            ownerAddress={campaign.ownerAddress}
-            ownerProfile={campaign.ownerProfile}
+            ownerAddress={campaign.creator}
             deadline={campaign.deadline}
+            amountCollected={campaign.amountCollected}
+            donators={campaign.donators.length}
             onDonate={handleDonate}
           />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Charity
+export default Charity;
