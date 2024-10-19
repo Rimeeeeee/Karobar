@@ -4,33 +4,35 @@ import BuyRWA from "./RWA/BuyRWA";
 import MyRWA from "./RWA/MyRWA";
 import CreateRWA from "./RWA/CreateRWA";
 import SideMenu from "./RWA/SideMenu";
-import SideBar from "../components/SideBar";
+import landing from "../landing.webp"; // Importing the background image
+import Rings from "../components/Rings";
+import Vanta from "../components/Vanta";
 
 const RWA: React.FC = () => {
   const location = useLocation(); // Get the current route location
 
-  // Check if the current path is one of the routes
-  const isRouteMatched = [
-    "/rwa/buy-rwa",
-    "/rwa/my-rwa",
-    "/rwa/create-rwa",
-  ].includes(location.pathname);
+  // Check if the current path is exactly "/rwa"
+  const isRWARoute = location.pathname === "/rwa";
 
   return (
-    <div className="flex h-screen bg-black">
-      {/* <div className="mb-14"> */}
-      <SideMenu />
-      {/* </div> */}
-      <div className="flex-grow flex items-center justify-center">
+    <div className="flex h-screen relative">
+      {isRWARoute && (
+        <div className="absolute top-0 left-0 w-full h-full z-0 flex items-center justify-center">
+          <Vanta />
+        </div>
+      )}
+
+      <div className="flex-grow flex items-center justify-center relative z-40">
+        <SideMenu />
         <Routes>
           <Route path="buy-rwa" element={<BuyRWA />} />
           <Route path="my-rwa" element={<MyRWA />} />
           <Route path="create-rwa" element={<CreateRWA />} />
         </Routes>
 
-        {!isRouteMatched && ( // Render the home content only when no route is matched
-          <div className="w-full flex justify-center items-center flex-col ">
-            <h2 className="text-3xl sm:text-5xl font-bold text-primary text-gradient">
+        {isRWARoute && (
+          <div className="w-full flex justify-center items-center flex-col z-0">
+            <h2 className="text-3xl sm:text-5xl font-bold text-primary text-white">
               Tokenize your Assets on Base!!!
             </h2>
           </div>

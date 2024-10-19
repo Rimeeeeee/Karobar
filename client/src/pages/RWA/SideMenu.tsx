@@ -1,17 +1,17 @@
-import React, { useState } from "react"
-import { NavLink } from "react-router-dom"
-import { FaShoppingCart, FaUserCircle, FaPlusCircle } from "react-icons/fa"
-import { MdMenu } from "react-icons/md" // Material Design icons
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { FaShoppingCart, FaUserCircle, FaPlusCircle } from "react-icons/fa";
+import { MdMenu } from "react-icons/md"; // Material Design icons
 
 const SideMenu: React.FC = () => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <div
       className={
         open
           ? `z-40 fixed inset-0 bg-gray-800 bg-opacity-25 flex items-center justify-end`
-          : `fixed inset-0 z-0 flex items-center justify-end`
+          : `fixed inset-0 z-10 flex items-center justify-end`
       }
     >
       {/* Menu Toggle Button */}
@@ -68,7 +68,7 @@ const SideMenu: React.FC = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SideMenu
+export default SideMenu;

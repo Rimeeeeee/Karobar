@@ -10,7 +10,7 @@ import { download } from "thirdweb/storage";
 import { useActiveAccount } from "thirdweb/react";
 import Balance from "../components/Balance";
 import FollowButton from "../components/FollowButton";
-
+import Abc from "../components/Basename";
 
 const ViewProfile: React.FC = () => {
   const { userId } = useParams(); // Use userId instead of id
@@ -30,7 +30,7 @@ const ViewProfile: React.FC = () => {
               "function getUserById(address _user) view returns ((uint256 uid, address userid, string name, string bio, string image_hash, string caption, uint256 dailycheckin, uint256[] dailycheckins, address[] followers, address[] following, uint256 token, bool blacklisted, uint256 userRating, bool verifiedUser))",
             params: [userId.toLowerCase()], // Ensure it's lowercase
           });
-
+          console.log(data);
           setUser({
             name: data.name,
             userid: data.userid,
@@ -38,8 +38,9 @@ const ViewProfile: React.FC = () => {
             imageHash: data.image_hash,
             followers: data.followers.length,
             following: data.following.length,
+            userrating: Number(data.userRating),
           });
-
+          console.log(user);
           try {
             const response = await download({
               client,
@@ -85,6 +86,14 @@ const ViewProfile: React.FC = () => {
               </p>
               <p className="text-gray-20 ml-5">{user.bio}</p>
             </div>
+          </div>
+          <div className="flex items-center justify-center gap-2 flex-row border-b-2 border-t-2 border-white">
+            <span className="text-lg">User Rating:</span>
+            <span className="text-xl text-red-500">{user.userrating}</span>
+          </div>
+          <div className="flex items-center justify-center flex-row border-b-2 border-white">
+            <span className="text-lg">Base Name of User:</span>
+            <Abc uid={userId} />
           </div>
           <div className="flex space-x-1 md:space-x-8 mt-4 items-center justify-center">
             <div className="flex flex-col">

@@ -1,41 +1,40 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
-import landing from "../landing.webp";
-import landing1 from "../landing1.webp";
-import landing2 from "../landing2.webp";
-import { NavLink } from "react-router-dom";
+import React from "react"
+import { motion } from "framer-motion"
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa"
+import landing1 from "../landing1.webp"
+import { NavLink } from "react-router-dom"
+import Rings from "../components/Rings"
+import Birds from "../components/Birds"
+
 const Home = () => {
   const addKBR = async () => {
-    const tokenAddress = "0x1234567890abcdef1234567890abcdef12345678"; // Custom token contract address
+    const tokenAddress = "0x1234567890abcdef1234567890abcdef12345678" // Custom token contract address
 
     try {
-      await navigator.clipboard.writeText(tokenAddress);
-      console.log("Token address copied to clipboard!");
+      await navigator.clipboard.writeText(tokenAddress)
+      console.log("Token address copied to clipboard!")
     } catch (err) {
-      console.error("Failed to copy token address: ", err);
+      console.error("Failed to copy token address: ", err)
     }
-  };
+  }
 
   return (
     <div
-      className="bg-blue-900 text-white w-screen overflow-hidden m-0"
-      style={{
-        backgroundImage: `url(${landing1})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
+      className="bg-blue-900 min-w-screen text-white overflow-hidden"
+      style={{}}
     >
-      {/* Hero Section */}
+      {/* Hero Section */}{" "}
+      <div className="absolute top-0 left-0 w-full h-full z-0">
+        <Birds />
+      </div>
       <motion.section
-        className="min-h-screen flex flex-col items-center justify-center bg-black bg-opacity-50 text-center p-4 md:p-8"
+        className="min-h-screen flex flex-col items-center justify-center  text-center p-4 md:p-8"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
         <motion.h1
-          className="text-4xl md:text-5xl font-bold mb-4 text-white"
+          className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -43,7 +42,7 @@ const Home = () => {
           One Stop Solution for All Your DeFi Needs
         </motion.h1>
         <motion.p
-          className="text-md md:text-lg mb-6 md:mb-8 text-gray-300"
+          className="text-sm sm:text-md md:text-lg mb-6 md:mb-8 text-gray-300"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5 }}
@@ -60,14 +59,14 @@ const Home = () => {
           <div className="flex items-center bg-blue-600 p-3 rounded-lg shadow-lg hover:bg-blue-500 transition-all">
             <button
               onClick={addKBR}
-              className="w-full md:w-64 px-2 md:px-2 py-0 md:py-0 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all"
+              className="w-full md:w-64 px-2 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all"
             >
               Add KBR to Wallet
             </button>
           </div>
           <NavLink
             to="/login"
-            className="w-full md:w-64 flex items-center justify-center px-2 md:px-2 py-0 md:py-0 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all text-center"
+            className="w-full md:w-64 flex items-center justify-center px-2 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all text-center"
           >
             Register
           </NavLink>
@@ -75,7 +74,7 @@ const Home = () => {
 
         {/* Additional Information */}
         <motion.p
-          className="mt-6 text-md md:text-lg text-white"
+          className="mt-6 text-sm sm:text-md md:text-lg text-white"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5 }}
@@ -91,7 +90,6 @@ const Home = () => {
           .
         </motion.p>
       </motion.section>
-
       {/* Features Section */}
       <motion.section
         className="py-12 px-4 md:px-8 bg-black bg-opacity-100"
@@ -99,7 +97,7 @@ const Home = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-white">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-white">
           Our Key Features
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
@@ -109,7 +107,7 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <h3 className="text-xl md:text-2xl font-bold mb-4 text-blue-400">
+            <h3 className="text-lg md:text-xl font-bold mb-4 text-blue-400">
               RWA Properties
             </h3>
             <p className="text-gray-300">
@@ -124,7 +122,7 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <h3 className="text-xl md:text-2xl font-bold mb-4 text-teal-400">
+            <h3 className="text-lg md:text-xl font-bold mb-4 text-teal-400">
               Decentralized Insurance
             </h3>
             <p className="text-gray-300">
@@ -139,7 +137,7 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <h3 className="text-xl md:text-2xl font-bold mb-4 text-blue-400">
+            <h3 className="text-lg md:text-xl font-bold mb-4 text-blue-400">
               Crowdfunding
             </h3>
             <p className="text-gray-300">
@@ -154,7 +152,7 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <h3 className="text-xl md:text-2xl font-bold mb-4 text-teal-400">
+            <h3 className="text-lg md:text-xl font-bold mb-4 text-teal-400">
               KBR Token Rewards
             </h3>
             <p className="text-gray-300">
@@ -169,7 +167,7 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <h3 className="text-xl md:text-2xl font-bold mb-4 text-blue-400">
+            <h3 className="text-lg md:text-xl font-bold mb-4 text-blue-400">
               Credit Score Tracking
             </h3>
             <p className="text-gray-300">
@@ -184,17 +182,16 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <h3 className="text-xl md:text-2xl font-bold mb-4 text-teal-400">
+            <h3 className="text-lg md:text-xl font-bold mb-4 text-teal-400">
               Cross Chain Token Transfer
             </h3>
             <p className="text-gray-300">
-              Secure and flexible stransfer of multiple tokens over the various
+              Secure and flexible transfer of multiple tokens over various
               popular chains.
             </p>
           </motion.div>
         </div>
       </motion.section>
-
       {/* Token Information */}
       <motion.section
         className="py-12 md:py-16 px-4 md:px-8 bg-blue-600 text-white text-center"
@@ -221,7 +218,6 @@ const Home = () => {
           </button>
         </div>
       </motion.section>
-
       {/* Footer */}
       <motion.footer
         className="py-8 bg-gray-800 text-center text-white"
@@ -242,7 +238,6 @@ const Home = () => {
           </a>
 
           {/* Founder 1 LinkedIn */}
-
           <a
             href="https://linkedin.com/in/founder1"
             target="_blank"
@@ -272,7 +267,7 @@ const Home = () => {
         </div>
       </motion.footer>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

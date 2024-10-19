@@ -13,6 +13,26 @@
   scrollbar-width: thin; /* For Firefox */
   scrollbar-color: transparent transparent; /* For Firefox */
 }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
 
 :root {
   line-height: 1.5;

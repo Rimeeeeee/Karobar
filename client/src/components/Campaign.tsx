@@ -1,61 +1,98 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { prepareContractCall, readContract, sendTransaction } from "thirdweb"
+import { createWallet } from "thirdweb/wallets"
+import { ethers } from "ethers"
+import { useKBRTokenContext } from "../context/context"
 
 interface CampaignProps {
+  campaignId: number // Renamed from "key" to "campaignId"
   title: string
-  image: string
+  image?: string // Make image optional
   description: string
-  ownerName: string
   ownerAddress: string
-  ownerProfile: string
   deadline: string
+  amountCollected: string
+  donators: number
   onDonate: (amount: number) => void
 }
 
 const Campaign: React.FC<CampaignProps> = ({
+  campaignId,
   title,
   image,
   description,
-  ownerName,
   ownerAddress,
-  ownerProfile,
   deadline,
+  amountCollected,
+  donators,
   onDonate,
 }) => {
   const [donationAmount, setDonationAmount] = useState(0)
+  const { BetterIndia, client } = useKBRTokenContext()
+  const [amount, setAmount] = useState(0)
 
-  const handleDonate = () => {
+  const handleDonate = async () => {
     if (donationAmount > 0) {
-      onDonate(donationAmount)
+      try {
+        const wallet = createWallet("io.metamask")
+        const account = await wallet.connect({ client })
+
+        const transaction = await prepareContractCall({
+          contract: BetterIndia,
+          method: "function donateToBetterIndia(uint256 _id) payable",
+          params: [BigInt(campaignId + 1)], // Using campaignId instead of key
+          value: ethers.parseEther(String(donationAmount)), // Updated ethers syntax
+        })
+
+        const { transactionHash } = await sendTransaction({
+          transaction,
+          account,
+        })
+
+        console.log(`Transaction successful: ${transactionHash}`)
+        onDonate(donationAmount) // Call the onDonate callback
+      } catch (error) {
+        console.error("Donation failed", error)
+      }
     } else {
       alert("Please enter a valid donation amount.")
     }
   }
+  useEffect(() => {
+    const getAmount = async () => {
+      const data = await readContract({
+        contract: BetterIndia,
+        method:
+          "function getGiftById(uint256 _id) view returns ((string title, string description, string imageHash, address creator, uint256 deadline, uint256 amountCollected, address[] donators))",
+        params: [BigInt(campaignId + 1)],
+      })
+      console.log("donatedddddd" + data.amountCollected)
+      setAmount(Number(data.amountCollected) / 10e18)
+    }
+    getAmount()
+    return () => {}
+  }, [])
 
   return (
     <div className="bg-gray-800 text-white p-2 rounded-lg shadow-lg w-full max-w-md mx-auto">
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-48 object-cover rounded-lg mb-4"
-      />
+      {image && (
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-48 object-cover rounded-lg mb-4"
+        />
+      )}
       <h1 className="text-2xl font-bold mb-2">{title}</h1>
       <p className="text-gray-300 mb-4">{description}</p>
 
       <div className="mb-4">
-        <p className="font-semibold">Owner: {ownerName}</p>
-        <p className="text-gray-400">Address: {ownerAddress}</p>
-        <a
-          href={ownerProfile}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-teal-400 underline"
-        >
-          View Owner Profile
-        </a>
+        <p className="font-semibold">Owner: {ownerAddress}</p>
+        {/* <p className="text-gray-400">No of donators: {donators}</p> */}
+        <p className="font-semibold">Amount Collected: {amount} Eth</p>
       </div>
 
       <div className="mb-4">
-        <p className="font-semibold">Deadline: {deadline}</p>
+        <p className="font-semibold">Deadline: {Number(deadline)} months</p>
       </div>
 
       <div className="mb-4 flex flex-col md:flex-row">
