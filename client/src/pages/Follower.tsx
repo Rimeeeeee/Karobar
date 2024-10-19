@@ -3,40 +3,37 @@ import { useParams, Link } from "react-router-dom";
 import { readContract } from "thirdweb";
 import { download } from "thirdweb/storage";
 
-interface Following {
+interface Follower {
   address: string;
   name: string;
   image_url: string;
 }
 
-const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
+const FollowersPage: React.FC<{ contract: any }> = ({ contract }) => {
   const { creatorAddress } = useParams<{ creatorAddress: string }>();
-  const [following, setFollowing] = useState<Following[]>([]);
+  const [followers, setFollowers] = useState<Follower[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchFollowing = async () => {
+    const fetchFollowers = async () => {
       if (!creatorAddress) return;
 
       try {
-        // Fetch following addresses
+        // Fetch follower addresses
         const response = await readContract({
           contract,
-          method:
-            "function getFollowing(address _creator) view returns (address[])",
+          method: "function getFollowers(address _creator) view returns (address[])",
           params: [creatorAddress],
         });
 
-        // Fetch detailed info for each following
-        const followingData = await Promise.all(
-          response.map(async (followingAddress: string) => {
+        // Fetch detailed info for each follower
+        const followersData = await Promise.all(
+          response.map(async (followerAddress: string) => {
             const userInfo = await readContract({
               contract,
-              method:
-                "function getUserById(address _user) view returns ((uint256 uid, address userid, string name, string bio, string image_hash, string caption, uint256 dailycheckin, uint256[] dailycheckins, address[] followers, address[] following, uint256 token, bool blacklisted, uint256 userRating, bool verifiedUser))",
-
-              params: [followingAddress],
+              method: "function getUserById(address _user) view returns ((uint256 uid, address userid, string name, string bio, string image_hash, string caption, uint256 dailycheckin, uint256[] dailycheckins, address[] followers, address[] following, uint256 token, bool blacklisted, uint256 userRating, bool verifiedUser))",
+              params: [followerAddress],
             });
 
             // Fetch image using the IPFS URI and convert to a blob URL
@@ -52,10 +49,10 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
               name: userInfo.name,
               image_url: imageUrl,
             };
-          }),
+          })
         );
 
-        setFollowing(followingData);
+        setFollowers(followersData);
         setLoading(false);
       } catch (error: any) {
         setError(error.message);
@@ -63,7 +60,7 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
       }
     };
 
-    fetchFollowing();
+    fetchFollowers();
   }, [contract, creatorAddress]);
 
   return (
@@ -71,31 +68,31 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
       <h1 className="text-3xl font-bold mb-4">Followers of {creatorAddress}</h1>
 
       {/* Loading state */}
-      {loading && <p className="text-gray-500">Loading followings...</p>}
+      {loading && <p className="text-gray-500">Loading followers...</p>}
 
       {/* Error state */}
       {error && <p className="text-red-500">Error: {error}</p>}
 
-      {/* Display followings */}
+      {/* Display followers */}
       {!loading && !error && (
         <ul>
-          {following.length === 0 ? (
-            <p className="text-gray-500">No following found.</p>
+          {followers.length === 0 ? (
+            <p className="text-gray-500">No followers found.</p>
           ) : (
-            following.map((followe, index) => (
+            followers.map((follower, index) => (
               <li key={index} className="flex items-center space-x-4 mb-4">
                 <img
-                  src={followe.image_url}
-                  alt={followe.name}
+                  src={follower.image_url}
+                  alt={follower.name}
                   className="w-12 h-12 rounded-full"
                 />
                 <div>
-                  <Link to={`/profile/${followe.address}`}>
+                  <Link to={`/profile/${follower.address}`}>
                     <p className="text-cream-500 font-bold hover:none">
-                      {followe.name}
+                      {follower.name}
                     </p>
                   </Link>
-                  <p className="text-gray-500 text-sm">{followe.address}</p>
+                  <p className="text-gray-500 text-sm">{follower.address}</p>
                 </div>
               </li>
             ))
@@ -106,6 +103,4 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
   );
 };
 
-
-export default FollowingPage;
-
+export default FollowersPage;

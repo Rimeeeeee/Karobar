@@ -16,7 +16,9 @@ import People from "./pages/People";
 import ViewProfile from "./pages/ViewPage";
 import FollowingPage from "./pages/Following";
 import { useKBRTokenContext } from "./context/context";
-import FollowersPage from "./pages/Followers";
+
+import FollowersPage from "./pages/Follower";
+
 export function App() {
   const { PeopleContract } = useKBRTokenContext();
   return (

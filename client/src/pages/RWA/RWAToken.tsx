@@ -71,7 +71,7 @@ const RWAToken: React.FC<NFTProps> = ({
     try {
       const wallet = createWallet("io.metamask");
       const account = await wallet.connect({ client });
-      console.log("aaaaaaaaaaaaaaaaaaa" + ethers.parseEther(price.toString()));
+
       const transaction = await prepareContractCall({
         contract: PropertyNFTContract,
         method: "function executeSale(uint256 tokenId) payable",
@@ -92,7 +92,7 @@ const RWAToken: React.FC<NFTProps> = ({
 
   return (
     <div
-      className={`w-full max-w-xs mx-auto p-4 rounded-lg shadow-lg z-10 text-white ${
+      className={`w-full z-10 max-w-xs mx-auto p-4 rounded-lg shadow-lg text-white ${
         forSale ? "border-2 border-green-500" : "border-2 border-white"
       }`}
     >
@@ -101,11 +101,9 @@ const RWAToken: React.FC<NFTProps> = ({
       </div>
       <div className="flex items-center mb-4 mt-2 border-y-2 p-2 border-white">
         <div className="ml-4">
-          <h2 className="text-lg font-semibold">
-            {creatorAddress.slice(0, 6) + "..." + creatorAddress.slice(-4)}
-          </h2>
+          <h2 className="text-lg font-semibold">{creatorAddress.slice(0, 6) + "..." + creatorAddress.slice(-4)}</h2>
           <p className="text-sm text-gray-400">
-            {sellerAddress.slice(0, 6) + "..." + sellerAddress.slice(36, 40)}
+            {sellerAddress.slice(0, 6) + "..." + sellerAddress.slice(-4)}
           </p>
         </div>
       </div>
