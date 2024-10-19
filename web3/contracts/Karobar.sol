@@ -969,7 +969,7 @@ contract MarketPlace {
             "sorry invalid amt"
         );
 
-         kbroken.approve(address(this), products[_pid].price * (10 ** kbrtoken.decimals());
+         kbrtoken.approve(address(this),products[_pid].price * (10 ** kbrtoken.decimals()));
         // icsToken.transferFrom(msg.sender, address, b);
 
         kbrtoken.transferFrom(

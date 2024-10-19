@@ -110,8 +110,10 @@ const CreateCampaign = () => {
 
   return (
     <div className="h-screen flex items-center justify-center bg-transparent text-white">
-      <Vanta/>
-      <div className="bg-transparent hover:bg-zinc-900 bg-opacity-100 border-white border-2 p-4 md:p-8 rounded-lg shadow-lg max-w-sm md:max-w-2xl lg:max-w-3xl">
+      <div className="absolute top-0 left-0 w-full h-full z-0">
+        <Vanta />
+      </div>
+      <div className="bg-black z-10 hover:bg-zinc-900 bg-opacity-50 border-white border-2 p-4 md:p-8 rounded-lg shadow-lg max-w-sm md:max-w-2xl lg:max-w-3xl">
         <h2 className="text-2xl font-bold mb-6 text-center">Create Your Gift!</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col">
