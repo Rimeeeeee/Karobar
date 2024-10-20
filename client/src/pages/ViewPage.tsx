@@ -9,7 +9,7 @@ import { download } from "thirdweb/storage"
 import { useActiveAccount } from "thirdweb/react"
 import Balance from "../components/Balance"
 import FollowButton from "../components/FollowButton"
-import Abc from "../components/Basename"
+//import Abc from "../components/Basename"
 
 const ViewProfile: React.FC = () => {
   const { userId } = useParams()
@@ -93,8 +93,8 @@ const ViewProfile: React.FC = () => {
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-4 border-b-2 border-gray-500 py-4">
-            <span className="text-lg text-gray-300">Base Name of User:</span>
-            <Abc uid={userId} />
+            <span className="text-lg text-gray-300">Uniquely identify at:</span>
+            {/*<Abc uid={userId} />*/}{user.userid}
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center space-y-6 sm:space-y-0 sm:space-x-6 mt-6">

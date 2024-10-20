@@ -7,7 +7,7 @@ import { readContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 
-import Abc from "./Basename";
+//import Abc from "./Basename";
 import { useKBRTokenContext } from "../context/context";
 
 
@@ -72,7 +72,7 @@ const TopBar: React.FC = () => {
       <div className="ml-12 hidden sm:block">
         {/* { ( */}
         <NavLink to={`/profile/${address}`} className="flex items-center space-x-2">
-          <Abc />
+          {/*<Abc />*/}@{address}
         </NavLink>
         {/* // ) : (
         //   <div className="flex items-center space-x-2">

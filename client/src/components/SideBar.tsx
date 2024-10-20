@@ -14,7 +14,7 @@ import { BiDonateHeart } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { MdSwapHorizontalCircle } from "react-icons/md";
 import { useActiveAccount } from "thirdweb/react";
-import Abc from "./Basename";
+//import Abc from "./Basename";
 
 const SideBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -45,7 +45,7 @@ const SideBar: React.FC = () => {
               to={`/profile/${address}`}
               className="flex items-center space-x-2 mt-8"
             >
-             <Abc/>
+             {/*<Abc/>*/}
             </NavLink>
         
           
