@@ -1,5 +1,5 @@
 <marquee><h1>K4R034R</h1><marquee>
-![k4r034r](https://github.com/user-attachments/assets/71c4c339-6b01-4ff3-a631-fb4e6b83c697)
+![k4r034r](https://github.com/user-attachments/assets/71c4c339-6b01-4ff3-a631-fb4e6b83c697 {width=200px height=200px})
 One Stop Solution for all yout DeFi needs.
 <h2>Work flow of Karobar</h2>
 
