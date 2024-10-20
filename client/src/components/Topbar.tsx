@@ -72,7 +72,7 @@ const TopBar: React.FC = () => {
       <div className="ml-12 hidden sm:block">
         {/* { ( */}
         <NavLink to={`/profile/${address}`} className="flex items-center space-x-2">
-          {/*<Abc />*/}@{address}
+          {/*<Abc />*/}@{address?.slice(0, 4) + "..." +address?.slice(-4)}
         </NavLink>
         {/* // ) : (
         //   <div className="flex items-center space-x-2">
