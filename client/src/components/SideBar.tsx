@@ -13,11 +13,13 @@ import {
 import { BiDonateHeart } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { MdSwapHorizontalCircle } from "react-icons/md";
+import { useActiveAccount } from "thirdweb/react";
+import Abc from "./Basename";
 
 const SideBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [user, setUser] = useState<any>(null);
-  const address = "0xAddressSample"; // Mocked for example
+  const address =useActiveAccount()?.address;
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -39,32 +41,14 @@ const SideBar: React.FC = () => {
         <div
           className={`p-1 text-lg font-semibold flex flex-col items-center ${!isOpen && "hidden"}`}
         >
-          {user ? (
             <NavLink
-              to={`/profile/${user.userId}`}
+              to={`/profile/${address}`}
               className="flex items-center space-x-2 mt-8"
             >
-              <img
-                src={user.profilePic}
-                alt="Profile"
-                className="w-10 h-10 rounded-full"
-              />
-              <div>
-                <div className="text-lg">{user.username}</div>
-                <div className="text-sm text-gray-700">
-                  @{sliceUserId(user.userId)}
-                </div>
-              </div>
+             <Abc/>
             </NavLink>
-          ) : (
-            <div className="flex items-center space-x-2 mt-8">
-              <div className="w-10 h-10 rounded-full bg-gray-500"></div>
-              <div>
-                <div className="text-lg">Loading...</div>
-                <div className="text-sm text-gray-700">Loading...</div>
-              </div>
-            </div>
-          )}
+        
+          
           <button
             onClick={toggleSidebar}
             className="text-4xl mt-7 ml-1 absolute top-4 right-4"

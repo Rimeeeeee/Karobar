@@ -7,16 +7,16 @@ import { download } from "thirdweb/storage";
 import { useNavigate } from "react-router-dom";
 
 const Profile: React.FC = () => {
-  // Define state for user data, loading, and error
+
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { client, PeopleContract } = useKBRTokenContext();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
 
-  // Fetch data from the contract when the component mounts
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,7 +27,7 @@ const Profile: React.FC = () => {
           params: [],
         });
 
-        const totalUsers1 = totalUsers.slice(1); // Skipping the first user
+        const totalUsers1 = totalUsers.slice(1); 
 
         const usersWithImages = await Promise.all(
           totalUsers1.map(async (user: any) => {
@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
                 user.userid,
                 error.message,
               );
-              return { ...user, image_url: "" }; // Return user data with an empty image_url in case of failure
+              return { ...user, image_url: "" }; 
             }
           }),
         );
@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
       fetchData();
     }
 
-    // Clean up object URLs when component unmounts
+   
     return () => {
       users.forEach((user) => {
         if (user.image_url) {

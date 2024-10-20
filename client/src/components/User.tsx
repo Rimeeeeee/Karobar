@@ -5,7 +5,7 @@ interface UserProps {
   name?: string
   userId?: string
 }
-//need to make it a navlink for future navigation to the profile
+
 const User: React.FC<UserProps> = ({ profilePic, name, userId }) => {
   return (
     <div className="flex items-center p-2 sm:p-4 w-56 lg:w-64 bg-zinc-950 rounded-lg shadow-lg border-white border">

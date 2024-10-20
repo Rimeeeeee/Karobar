@@ -1,5 +1,5 @@
 import React from "react"
-import { FaInfoCircle } from "react-icons/fa" // Info icon from FontAwesome, you can use other libraries if preferred
+import { FaInfoCircle } from "react-icons/fa" 
 
 const TestnetInfo: React.FC = () => {
   return (

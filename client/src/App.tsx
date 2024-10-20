@@ -3,8 +3,7 @@ import { ConnectButton } from "thirdweb/react";
 import thirdwebIcon from "./thirdweb.svg";
 import CryptoSwap from "./components/CryptoSwap";
 import SideBar from "./components/SideBar";
-import { Merch } from "./pages/Merch";
-import Home from "./pages/Home"; // Ensure this is created or add a placeholder
+import Home from "./pages/Home"; 
 import TopBar from "./components/Topbar";
 import Swap from "./pages/Swap";
 import RWA from "./pages/RWA";
@@ -16,9 +15,12 @@ import People from "./pages/People";
 import ViewProfile from "./pages/ViewPage";
 import FollowingPage from "./pages/Following";
 import { useKBRTokenContext } from "./context/context";
-
 import FollowersPage from "./pages/Follower";
 import CreateCampaign from "./pages/CreateCampaign";
+import CreateInsurance from "./pages/CreateInsurance";
+import InsurancePage from "./pages/InsurancePage";
+import MyInsurance from "./pages/MyInsurance";
+import Merch from "./pages/Merch";
 
 export function App() {
   const { PeopleContract } = useKBRTokenContext();
@@ -50,6 +52,9 @@ export function App() {
               <Route path="/dailylogin" element={<DailyLogin />} />
               <Route path="/people" element={<People />} />
               <Route path="/profile/:userId" element={<ViewProfile />} />
+              <Route path="/insurance/create" element={<CreateInsurance />} />
+              <Route path="/insurance/myinsurance" element={<MyInsurance />} />
+              <Route path="/insurance" element={<InsurancePage/>} />
               <Route
                 path="/following/:creatorAddress"
                 element={<FollowingPage contract={PeopleContract} />}

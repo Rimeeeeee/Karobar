@@ -41,7 +41,7 @@ const CreateRWA: React.FC = () => {
           formState.papers,
         ],
         value: ethers.parseEther("0.0001"),
-        // Set token value to 0.001 ether
+        
       });
 
       const { transactionHash } = await sendTransaction({

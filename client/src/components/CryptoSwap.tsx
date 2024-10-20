@@ -1,177 +1,157 @@
-import React, { useState } from "react"
-import CurrencyInput from "react-currency-input-field"
-import { BiTransfer } from "react-icons/bi"
-import { motion } from "framer-motion"
-import TestnetInfo from "./Info"
+import React, { useState, useEffect } from "react";
+import { useActiveAccount } from "thirdweb/react";
+import { createWallet } from "thirdweb/wallets";
+import { prepareContractCall, sendTransaction } from "thirdweb";
+import Vanta from "../components/Vanta";
+import { useKBRTokenContext } from "../context/context";
+import TestnetInfo from "./Info";
 
-const currencies = ["BTC", "ETH", "SOL", "USDC"]
+const CryptoSwap = () => {
+  const [formState, setFormState] = useState({
+    destinationAccount: "",
+    tokenValue: "",
+    destinationChain:""
+  });
+  const [createTransactionSuccess, setCreateTransactionSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { TokenTransferor, client } = useKBRTokenContext();
+  const address = useActiveAccount()?.address;
 
-const CryptoSwap: React.FC = () => {
-  const [fromCurrency, setFromCurrency] = useState<string>("BTC")
-  const [toCurrency, setToCurrency] = useState<string>("ETH")
-  const [amount, setAmount] = useState<number>(0)
-  const [swapResult, setSwapResult] = useState<number | null>(null)
+  const handleTransactionCreation = async () => {
+    try {
+      if (formState.destinationAccount && formState.tokenValue) {
+        const wallet = createWallet("io.metamask");
+        const connectedAccount = await wallet.connect({ client });
 
-  // Swap logic (mock for demo purposes)
-  const handleSwap = () => {
-    const mockRate = 0.5 // Example swap rate for demo
-    const result = amount * mockRate
-    setSwapResult(result)
-  }
+        const transaction = await prepareContractCall({
+          contract: TokenTransferor,
+          method:
+            "function transferTokensPayLINK(uint64 _destinationChainSelector, address _receiver, address _token, uint256 _amount) returns (bytes32 messageId)",
+          params: [
+            BigInt("14767482510784806043"),
+            formState.destinationAccount,
+            "0x88A2d74F47a237a62e7A51cdDa67270CE381555e",
+            BigInt(formState.tokenValue),
+          ],
+        });
+       
+         console.log(BigInt("14767482510784806043"));
+        const { transactionHash } = await sendTransaction({
+          transaction,
+          account: connectedAccount,
+        });
 
-  const swapOption = () => {
-    setFromCurrency(toCurrency)
-    setToCurrency(fromCurrency)
-  }
+        if (transactionHash) {
+          setCreateTransactionSuccess(true);
+          alert("Transaction created successfully. View on CCIP block explorer!");
+          setTimeout(() => setCreateTransactionSuccess(false), 3000);
+          setFormState({
+            destinationAccount: "",
+            tokenValue: "",
+            destinationChain:""
+          });
+        }
+      } else {
+        setError("Please fill all fields correctly.");
+      }
+    } catch (err) {
+      console.error("Error creating transaction:", err);
+      setError("Failed to create transaction.");
+    }
+  };
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleTransactionCreation();
+  };
 
   return (
-    <div className=" flex flex-col justify-center items-center bg-black overflow-hidden">
-      <div className="max-w-lg w-full p-1 bg-black rounded-lg shadow-lg ">
-        <div className="flex flex-col items-center justify-between">
-          {/* From Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full sm:w-[24rem] lg:w-[32rem] p-4 bg-zinc-950 border rounded-lg shadow-md"
-          >
-            <label
-              htmlFor="from-currency"
-              className="block mb-2 text-white font-semibold"
-            >
-              From:
+    <div className="h-screen flex flex-col items-center justify-center bg-transparent text-white">
+      <div className="absolute top-0 left-0 w-full h-full z-0">
+        <Vanta />
+      </div>
+      <div className="bg-black z-10 hover:bg-zinc-900 bg-opacity-50 border-white border-2 p-4 md:p-8 rounded-lg shadow-lg max-w-sm md:max-w-2xl lg:max-w-3xl">
+        <h2 className="text-3xl font-bold mb-6 text-center">
+          Create Your Transaction!
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Destination Chain */}
+          <div className="flex flex-col text-lg">
+            <label htmlFor="chain" className="font-medium">
+              Destination Chain: 14767482510784806043
             </label>
-            <select
-              id="from-currency"
-              value={fromCurrency}
-              onChange={(e) => setFromCurrency(e.target.value)}
-              className="w-full p-2 border bg-zinc-900 text-white rounded-lg focus:ring focus:ring-blue-600"
-            >
-              {currencies.map((currency) => (
-                <option key={currency} value={currency}>
-                  {currency}
-                </option>
-              ))}
-            </select>
-
-            <div className="mt-2">
-              <label
-                htmlFor="amount"
-                className="block mb-2 text-white font-semibold"
-              >
-                Amount:
-              </label>
-              <CurrencyInput
-                id="amount"
-                name="amount"
-                placeholder="Enter amount"
-                defaultValue={0}
-                decimalsLimit={8}
-                onValueChange={(value) => setAmount(Number(value))}
-                className="w-full p-1 border rounded-lg bg-zinc-900 text-white focus:ring focus:ring-blue-600"
-              />
-              <label
-                htmlFor="receiver-address"
-                className="block mb-2 mt-2 text-white font-semibold"
-              >
-                Enter Receiver Address:
-              </label>
-              <input
-                type="text"
-                id="receiver-address"
-                className="w-full p-1 border rounded-lg bg-zinc-900 text-white focus:ring focus:ring-blue-600"
-              />
-            </div>
-          </motion.div>
-
-          {/* Swap Icon */}
-          <div className="mx-2 my-2 bg-transparent">
-            <motion.div
-              className="bg-transparent"
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <BiTransfer
-                className="w-8 h-8 text-blue-500 rotate-90 cursor-pointer hover:text-purple-500"
-                onClick={swapOption}
-              />
-              <motion.div
-                className="absolute w-10 h-10 rounded-md opacity-50 shadow-lg transition-all duration-300 ease-in-out"
-                whileHover={{ opacity: 1 }}
-                style={{
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                  zIndex: -1,
-                }}
-              />
-            </motion.div>
           </div>
 
-          {/* To Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full sm:w-[24rem] lg:w-[32rem] p-4 bg-zinc-950 border rounded-lg shadow-md"
-          >
-            <label
-              htmlFor="to-currency"
-              className="block mb-2 text-white font-semibold"
-            >
-              To:
+          {/* Destination Address */}
+          <div className="flex flex-col text-lg">
+            <label htmlFor="destination" className="font-medium">
+              Destination Address:
             </label>
-            <select
-              id="to-currency"
-              value={toCurrency}
-              onChange={(e) => setToCurrency(e.target.value)}
-              className="w-full p-2 border bg-zinc-900 text-white rounded-lg focus:ring focus:ring-blue-600"
-            >
-              {currencies.map((currency) => (
-                <option key={currency} value={currency}>
-                  {currency}
-                </option>
-              ))}
-            </select>
+            <input
+              type="text"
+              id="destination"
+              name="destinationAccount"
+              placeholder="Enter destination address"
+              value={formState.destinationAccount}
+              onChange={handleChange}
+              className="mt-1 p-3 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-            <div className="mt-2">
-              <label
-                htmlFor="swap-result"
-                className="block mb-2 text-white font-semibold"
-              >
-                You Receive:
-              </label>
-              <div className="w-full p-1 border bg-zinc-900 text-white rounded-lg">
-                {swapResult !== null ? `${swapResult} ${toCurrency}` : "0.00"}
-              </div>
-            </div>
-          </motion.div>
-        </div>
+          {/* Token Address */}
+          <div className="flex flex-col text-lg">
+            <label htmlFor="token" className="font-medium">
+              Token address of ccip-bnm: 0x88A2d74F47a237a62e7A51cdDa67270CE381555e
+            </label>
+          </div>
 
-        <div className="flex justify-center w-full">
-          <motion.button
-            onClick={handleSwap}
-            className="w-full sm:w-[24rem] lg:w-[32rem] mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg"
-            initial={{ scale: 1 }}
-            animate={{ scale: 1 }}
-            whileHover={{
-              scale: 1.1,
-              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-            }}
-            whileTap={{ scale: 0.95 }}
+          {/* Token Amount */}
+          <div className="flex flex-col text-lg">
+            <label htmlFor="amount" className="font-medium">
+              Enter amount:
+            </label>
+            <input
+              type="text"
+              id="amount"
+              name="tokenValue"
+              placeholder="Enter amount to send"
+              value={formState.tokenValue}
+              onChange={handleChange}
+              className="mt-1 p-3 border border-gray-800 bg-zinc-950 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="mt-8 py-3 px-5 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700 w-full"
           >
-            Swap
-          </motion.button>
-        </div>
+            Create Transaction
+          </button>
+        </form>
       </div>
-      <div className="mt-1">
+
+      {/* TestnetInfo Component */}
+      <div className="z-10 mt-8">
         <TestnetInfo />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CryptoSwap
+export default CryptoSwap;

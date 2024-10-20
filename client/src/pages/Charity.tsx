@@ -86,7 +86,7 @@ const Charity = () => {
           <Campaign
             campaignId={index}
             title={campaign.title}
-            image={campaign.imageHash} // If imageHash is not present, it'll handle it
+            image={campaign.imageHash} 
             description={campaign.description}
             ownerAddress={campaign.creator}
             deadline={campaign.deadline}

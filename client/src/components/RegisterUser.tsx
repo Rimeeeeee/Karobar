@@ -6,11 +6,11 @@ import { prepareContractCall, sendTransaction } from "thirdweb";
 import { upload } from "thirdweb/storage";
 
 const RegisterUser: React.FC = () => {
-  // Define the initial state
+  
   const [formState, setFormState] = useState({
     name: "",
     caption: "",
-    profilePic: "", // Now a string for IPFS hash
+    profilePic: "", 
     bio: "",
   });
   const [createUserSuccess, setCreateUserSuccess] = useState(false);

@@ -4,14 +4,14 @@ import BuyRWA from "./RWA/BuyRWA";
 import MyRWA from "./RWA/MyRWA";
 import CreateRWA from "./RWA/CreateRWA";
 import SideMenu from "./RWA/SideMenu";
-import landing from "../landing.webp"; // Importing the background image
+import landing from "../landing.webp"; 
 import Rings from "../components/Rings";
 import Vanta from "../components/Vanta";
 
 const RWA: React.FC = () => {
-  const location = useLocation(); // Get the current route location
+  const location = useLocation(); 
 
-  // Check if the current path is exactly "/rwa"
+  
   const isRWARoute = location.pathname === "/rwa";
 
   return (

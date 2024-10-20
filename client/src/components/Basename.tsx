@@ -10,23 +10,22 @@ import {
 import { baseSepolia } from "viem/chains";
 import { useActiveAccount } from "thirdweb/react";
 
-// Define props interface
+
 interface AbcProps {
-  uid?: string; // Optional prop type
+  uid?: string; 
 }
 
 const basename = "karobar.basetest.eth";
 
 const Abc: React.FC<AbcProps> = ({ uid }) => {
-  const address = uid || useActiveAccount()?.address; // Get the active account's address
+  const address = uid || useActiveAccount()?.address; 
   const [avatar, setAvatar] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isMounted = true; // Track if component is mounted
-
+    let isMounted = true; 
     const fetchData = async () => {
       if (!address) {
         setLoading(false);
@@ -58,12 +57,12 @@ const Abc: React.FC<AbcProps> = ({ uid }) => {
     fetchData();
 
     return () => {
-      isMounted = false; // Cleanup to avoid setting state on unmounted component
+      isMounted = false; 
     };
-  }, [address]); // Refetch data when the address changes
+  }, [address]);
 
   if (loading) {
-    return <div>Loading...</div>; // Consider adding a spinner or more styling
+    return <div>Loading...</div>; 
   }
 
   if (error) {
@@ -77,7 +76,8 @@ const Abc: React.FC<AbcProps> = ({ uid }) => {
         chain={baseSepolia}
         schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
       >
-        <Avatar address={`0x${address?.slice(2)}`} chain={baseSepolia} />
+        
+        {/*<Avatar address={`0x${address?.slice(2)}`} chain={baseSepolia} />*/}
         <Name address={`0x${address?.slice(2)}`} chain={baseSepolia} />
         <Address />
       </Identity>

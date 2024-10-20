@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import RINGS from "vanta/dist/vanta.rings.min";
-// import * as THREE from "three"
+
 
 const VantaEffect: React.FC = () => {
-  // Update state type to include VantaEffect or null
-  const [vantaEffect, setVantaEffect] = useState<any>(null); // Or use a more specific type if available
+  
+  const [vantaEffect, setVantaEffect] = useState<any>(null); 
   const myRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,8 +19,8 @@ const VantaEffect: React.FC = () => {
         minWidth: 200.0,
         scale: 0.9,
         scaleMobile: 1.0,
-        backgroundColor: 0x0, // Black background
-        color: 0x8500ff, // Purple rings
+        backgroundColor: 0x0, 
+        color: 0x8500ff, 
       });
 
       setVantaEffect(effect);
@@ -34,4 +34,4 @@ const VantaEffect: React.FC = () => {
 };
 
 export default VantaEffect;
-//update it to be used as background
+

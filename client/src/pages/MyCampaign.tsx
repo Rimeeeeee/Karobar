@@ -32,19 +32,19 @@ const MyCampaign = () => {
             if (campaign.imageHash) {
               const response = await download({
                 client,
-                uri: campaign.imageHash, // Using the IPFS URI format
+                uri: campaign.imageHash, 
               });
               const fileBlob = await response.blob();
               const fileUrl = URL.createObjectURL(fileBlob);
               return { ...campaign, imageHash: fileUrl };
             }
-            // Return campaign data without modifying the image if imageHash is not present
+          
             return campaign;
           })
         );
 
         setCampaigns(Array.from(campaignsWithImages));
-        setLoading(false); // Set loading to false after successful fetch
+        setLoading(false); 
       } catch (error: any) {
         console.error("Error fetching Campaigns", error);
         setLoading(false);
@@ -87,7 +87,7 @@ const MyCampaign = () => {
           <Campaign
             campaignId={index}
             title={campaign.title}
-            image={campaign.imageHash} // If imageHash is not present, it'll handle it
+            image={campaign.imageHash}
             description={campaign.description}
             ownerAddress={campaign.creator}
             deadline={campaign.deadline}

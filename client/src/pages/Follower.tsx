@@ -20,14 +20,14 @@ const FollowersPage: React.FC<{ contract: any }> = ({ contract }) => {
       if (!creatorAddress) return;
 
       try {
-        // Fetch follower addresses
+        
         const response = await readContract({
           contract,
           method: "function getFollowers(address _creator) view returns (address[])",
           params: [creatorAddress],
         });
 
-        // Fetch detailed info for each follower
+    
         const followersData = await Promise.all(
           response.map(async (followerAddress: string) => {
             const userInfo = await readContract({
@@ -36,10 +36,10 @@ const FollowersPage: React.FC<{ contract: any }> = ({ contract }) => {
               params: [followerAddress],
             });
 
-            // Fetch image using the IPFS URI and convert to a blob URL
+           
             const response = await download({
               client: contract.client,
-              uri: `ipfs://${userInfo.image_hash}`, // Using the IPFS URI format
+              uri: `ipfs://${userInfo.image_hash}`, 
             });
             const fileBlob = await response.blob();
             const imageUrl = URL.createObjectURL(fileBlob);

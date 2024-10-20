@@ -11,23 +11,23 @@ interface FollowButtonProps {
 const FollowButton: React.FC<FollowButtonProps> = ({ userId }) => {
   const {PeopleContract,client } = useKBRTokenContext();
   const [isFollowing, setIsFollowing] = useState<boolean | null>(null);
-  const { address } = useActiveAccount() || {}; // Ensure correct type
+  const { address } = useActiveAccount() || {}; 
 
   useEffect(() => {
     const checkFollowStatus = async () => {
       if (PeopleContract && address) {
         try {
-          // Fetch the list of followers for the given user
+          
           const followersReadonly: readonly string[] = await readContract({
             contract: PeopleContract,
             method: "function getFollowers(address _creator) view returns (address[])",
             params: [userId],
           });
 
-          // Convert readonly array to mutable array
+          
           const followers: string[] = [...followersReadonly];
 
-          // Check if the current user is in the list of followers
+          
           const isUserFollowing = followers.includes(address);
           setIsFollowing(isUserFollowing);
         } catch (error) {
@@ -55,7 +55,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ userId }) => {
 
       const { transactionHash } = await sendTransaction({
         transaction,
-        account, // Ensure `account` is of type `Account`
+        account, 
       });
 
       console.log(`${method.charAt(0).toUpperCase() + method.slice(1)} successful`, transactionHash);

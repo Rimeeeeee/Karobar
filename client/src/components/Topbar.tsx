@@ -10,7 +10,7 @@ import { download } from "thirdweb/storage";
 import Abc from "./Basename";
 import { useKBRTokenContext } from "../context/context";
 
-// Define the User type
+
 interface User {
   username: string;
   profilePic: string;
@@ -71,7 +71,7 @@ const TopBar: React.FC = () => {
       {/* Profile section */}
       <div className="ml-12 hidden sm:block">
         {/* { ( */}
-        <NavLink to={`/profile/$`} className="flex items-center space-x-2">
+        <NavLink to={`/profile/${address}`} className="flex items-center space-x-2">
           <Abc />
         </NavLink>
         {/* // ) : (

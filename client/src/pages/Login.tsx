@@ -5,7 +5,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useActiveAccount } from "thirdweb/react";
 import { readContract } from "thirdweb";
 import { useKBRTokenContext } from "../context/context";
-import TopBar from "../components/Topbar"; // Import the TopBar component
+import TopBar from "../components/Topbar"; 
 import SideBar from "../components/SideBar";
 
 const Login: React.FC = () => {

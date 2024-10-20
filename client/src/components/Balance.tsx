@@ -8,7 +8,6 @@ const Balance: React.FC = () => {
   const [balance, setBalance] = useState<number>(0);
   const { KBRContract } = useKBRTokenContext();
   const address = useActiveAccount()?.address;
-  //  console.log(address)
   useEffect(() => {
     if (address) {
       const getBalance = async () => {

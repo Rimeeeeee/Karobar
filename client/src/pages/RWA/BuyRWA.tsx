@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RWAToken from "./RWAToken"; // Import RWAToken component
+import RWAToken from "./RWAToken"; 
 import { readContract } from "thirdweb";
 import { useKBRTokenContext } from "../../context/context";
 
@@ -20,7 +20,7 @@ const BuyRWA: React.FC = () => {
         console.log("NFT Data:", nftData);
 
         setNfts(Array.from(nftData));
-        setLoading(false); // Set loading to false after successful fetch
+        setLoading(false); 
       } catch (error: any) {
         console.error("Error fetching NFTs", error);
         setLoading(false);
@@ -45,13 +45,13 @@ const BuyRWA: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-4 overflow-y-auto no-scrollbar mt-12">
         {nfts.map((nft, index) => (
           <RWAToken
-            key={`${nft.tokenId.toString()}-${index}`} // Ensure unique key
-            papers={nft.papers} // Use papers for the image URI
+            key={`${nft.tokenId.toString()}-${index}`} 
+            papers={nft.papers} 
             creatorAddress={nft.owner}
             sellerAddress={nft.seller}
             price={nft.price}
-            uri={nft.papers} // Using papers as the image hash for URI
-            tokenId={nft.tokenId.toString()} // Convert BigInt to string directly
+            uri={nft.papers} 
+            tokenId={nft.tokenId.toString()} 
             forSale={nft.forSale}
             location={nft.location}
             size={nft.size}

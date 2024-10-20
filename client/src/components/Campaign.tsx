@@ -6,9 +6,9 @@ import { useKBRTokenContext } from "../context/context"
 import { useActiveAccount } from "thirdweb/react"
 
 interface CampaignProps {
-  campaignId: number // Renamed from "key" to "campaignId"
+  campaignId: number 
   title: string
-  image?: string // Make image optional
+  image?: string 
   description: string
   ownerAddress: string
   deadline: string
@@ -41,8 +41,8 @@ const Campaign: React.FC<CampaignProps> = ({
         const transaction = await prepareContractCall({
           contract: BetterIndia,
           method: "function donateToBetterIndia(uint256 _id) payable",
-          params: [BigInt(campaignId + 1)], // Using campaignId instead of key
-          value: ethers.parseEther(String(donationAmount)), // Updated ethers syntax
+          params: [BigInt(campaignId + 1)], 
+          value: ethers.parseEther(String(donationAmount)),
         })
 
         const { transactionHash } = await sendTransaction({
@@ -51,7 +51,7 @@ const Campaign: React.FC<CampaignProps> = ({
         })
 
         console.log(`Transaction successful: ${transactionHash}`)
-        onDonate(donationAmount) // Call the onDonate callback
+        onDonate(donationAmount) 
       } catch (error) {
         console.error("Donation failed", error)
       }

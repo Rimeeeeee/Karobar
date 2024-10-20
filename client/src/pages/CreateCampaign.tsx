@@ -95,7 +95,7 @@ const CreateCampaign = () => {
         });
         setFormState((prevState) => ({
           ...prevState,
-          imageHash: uris, // Set the first URI
+          imageHash: uris,
         }));
       } catch (error) {
         console.error("Error uploading file to IPFS:", error);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaShoppingCart, FaUserCircle, FaPlusCircle } from "react-icons/fa";
-import { MdMenu } from "react-icons/md"; // Material Design icons
+import { MdMenu } from "react-icons/md"; 
 
 const SideMenu: React.FC = () => {
   const [open, setOpen] = useState(false);

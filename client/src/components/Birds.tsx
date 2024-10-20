@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import BIRDS from "vanta/dist/vanta.birds.min" // Correct import for 'birds'
+import BIRDS from "vanta/dist/vanta.birds.min" 
 
 const Birds = () => {
   const [vantaEffect, setVantaEffect] = useState<any>(null)
@@ -9,7 +9,7 @@ const Birds = () => {
     if (!vantaEffect) {
       setVantaEffect(
         BIRDS({
-          el: myRef.current, // Use ref instead of an ID
+          el: myRef.current, 
           mouseControls: true,
           touchControls: true,
           gyroControls: false,
@@ -30,14 +30,14 @@ const Birds = () => {
       )
     }
     return () => {
-      if (vantaEffect) vantaEffect.destroy() // Clean up the effect
+      if (vantaEffect) vantaEffect.destroy() 
     }
   }, [vantaEffect])
 
   return (
     <div
-      ref={myRef} // Attach the ref here
-      style={{ width: "100%", height: "100vh" }} // Full-screen effect
+      ref={myRef} 
+      style={{ width: "100%", height: "100vh" }} 
       className="z-0"
     ></div>
   )

@@ -7,17 +7,36 @@ import Rings from "../components/Rings"
 import Birds from "../components/Birds"
 
 const Home = () => {
-  const addKBR = async () => {
-    const tokenAddress = "0x1234567890abcdef1234567890abcdef12345678" // Custom token contract address
 
+  async function addKBR() {
+    const tokenAddress =import.meta.env.VITE_KBR_CONTRACT_ADDRESS as string;  
+    const tokenSymbol = 'KBR';  
+    const tokenDecimals = 18; 
+ 
+  
     try {
-      await navigator.clipboard.writeText(tokenAddress)
-      console.log("Token address copied to clipboard!")
-    } catch (err) {
-      console.error("Failed to copy token address: ", err)
+      const wasAdded = await window.ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20', 
+          options: {
+            address: tokenAddress, 
+            symbol: tokenSymbol, 
+            decimals: tokenDecimals, 
+            
+          },
+        },
+      });
+  
+      if (wasAdded) {
+        console.log('Token added!');
+      } else {
+        console.log('Token not added.');
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
-
   return (
     <div
       className="bg-blue-900 min-w-screen text-white overflow-hidden"
@@ -82,10 +101,10 @@ const Home = () => {
           This application is currently on the Base Sepolia testnet. For any
           queries, please contact us at{" "}
           <a
-            href="mailto:contact@kbrdefi.com"
+            href="mailto:k4r034r@gmail.com"
             className="text-teal-400 hover:underline"
           >
-            contact@kbrdefi.com
+            k4r034r@gmail.com
           </a>
           .
         </motion.p>
@@ -207,9 +226,9 @@ const Home = () => {
           for exclusive perks, including merchandise and premium DeFi services.
         </p>
         <div className="flex flex-col md:flex-row gap-2 justify-center items-center">
-          <button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-300 transition-all">
+          <a href="https://github.com/Rimeeeeee/Karobar"><button className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-300 transition-all">
             Learn More About KBR
-          </button>
+          </button></a>
           <button
             onClick={addKBR}
             className="w-full md:w-auto px-4 md:px-6 py-2 md:py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-300 transition-all"
@@ -225,11 +244,11 @@ const Home = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <p className="text-gray-400">© KR0B3R. All Rights Reserved.</p>
+        <p className="text-gray-400">© K4R034R. All Rights Reserved.</p>
         <div className="flex justify-center gap-6 mt-4 text-white">
           {/* GitHub */}
           <a
-            href="https://github.com/your-repo"
+            href="https://github.com/Rimeeeeee/Karobar"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-teal-500 transition"
@@ -239,7 +258,7 @@ const Home = () => {
 
           {/* Founder 1 LinkedIn */}
           <a
-            href="https://linkedin.com/in/founder1"
+            href="https://www.linkedin.com/in/soubhik-singha-mahapatra-487964255/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-teal-500 transition"
@@ -249,7 +268,7 @@ const Home = () => {
 
           {/* Founder 2 LinkedIn */}
           <a
-            href="https://linkedin.com/in/founder2"
+            href="https://www.linkedin.com/in/ishika-choudhury-b64a68261/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-teal-500 transition"
@@ -259,7 +278,7 @@ const Home = () => {
 
           {/* Email */}
           <a
-            href="mailto:contact@kbrdefi.com"
+            href="mailto:k4r034r@gmail.com"
             className="hover:text-teal-500 transition"
           >
             <FaEnvelope size={24} />

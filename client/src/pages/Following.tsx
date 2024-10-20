@@ -28,7 +28,7 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
           params: [creatorAddress],
         });
 
-        // Fetch detailed info for each following
+       
         const followingData = await Promise.all(
           response.map(async (followingAddress: string) => {
             const userInfo = await readContract({
@@ -39,10 +39,10 @@ const FollowingPage: React.FC<{ contract: any }> = ({ contract }) => {
               params: [followingAddress],
             });
 
-            // Fetch image using the IPFS URI and convert to a blob URL
+            
             const response = await download({
               client: contract.client,
-              uri: `ipfs://${userInfo.image_hash}`, // Using the IPFS URI format
+              uri: `ipfs://${userInfo.image_hash}`, 
             });
             const fileBlob = await response.blob();
             const imageUrl = URL.createObjectURL(fileBlob);

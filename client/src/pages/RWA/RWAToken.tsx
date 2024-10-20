@@ -8,15 +8,15 @@ import { ethers } from "ethers";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 
 interface NFTProps {
-  papers: boolean; // Or the correct type for papers (e.g., boolean, string)
+  papers: boolean; 
   creatorAddress: string;
   sellerAddress: string;
-  price: number; // Or the appropriate type (could be BigInt or bigint if applicable)
+  price: number; 
   uri: string;
-  tokenId: string; // Or number, based on your actual data
+  tokenId: string; 
   forSale: boolean;
   location: string;
-  size: string | number; // Define appropriately
+  size: string | number; 
 }
 
 const RWAToken: React.FC<NFTProps> = ({
@@ -46,7 +46,7 @@ const RWAToken: React.FC<NFTProps> = ({
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        // Fetch tokenURI and handle IPFS URL for NFT image
+        
         const tokenURI = await readContract({
           contract: PropertyNFTContract,
           method: "function tokenURI(uint256 tokenId) view returns (string)",
@@ -77,7 +77,7 @@ const RWAToken: React.FC<NFTProps> = ({
         contract: PropertyNFTContract,
         method: "function executeSale(uint256 tokenId) payable",
         params: [BigInt(tokenId)],
-        value: BigInt(price.toString()), // Convert price to string for parsing
+        value: BigInt(price.toString()), 
       });
 
       const { transactionHash } = await sendTransaction({
@@ -133,7 +133,7 @@ const RWAToken: React.FC<NFTProps> = ({
         {sellerAddress !== activeAccountAddress && (
           <button
             className="buy-now-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => buyNFTs(Number(tokenId), price)} // Corrected price handling
+            onClick={() => buyNFTs(Number(tokenId), price)} 
           >
             Buy Now
           </button>

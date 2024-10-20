@@ -6,13 +6,13 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
+//PropertyNFT-adssigned for handling RWA
 contract PropertyNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _propertyIds;
     Counters.Counter private _itemsSold;
     address payable owner;
-    uint256 listPrice = 0.0001 ether; //will update later
+    uint256 listPrice = 0.0001 ether; 
 
     KBRToken public kbrtoken;
     People public people;
@@ -234,7 +234,7 @@ contract PropertyNFT is ERC721URIStorage {
         }
     }
 }
-
+//KBRToken-platform customised ERC20 Token
 contract KBRToken is ERC20, ERC20Burnable {
     address payable owner;
 
@@ -259,7 +259,7 @@ contract KBRToken is ERC20, ERC20Burnable {
 
 error AlreadyAnUser();
 error InvalidAccess();
-
+//People-Customize user experience and provide additional layer of security
 contract People {
     address immutable owner;
     KBRToken public kbrtoken;
@@ -504,7 +504,7 @@ contract People {
         return userCheck[_user].blacklisted;
     }
 }
-
+//BetterIndia-scheme currated for country's growth
 contract BetterIndia {
     address immutable owner;
     People people;
@@ -589,6 +589,7 @@ contract BetterIndia {
         return giftsArray;
     }
 }
+//Insurance-handles the insurance schemes
 error MinimumDepositAmountInvalid();
 error InsufficientFundToStartInsurance();
 error NotAValidPid();
@@ -913,7 +914,7 @@ contract Insurance {
 
     receive() external payable {}
 }
-
+//MarketPlace-spend to get awesome goods
 contract MarketPlace {
     address public immutable owner;
     KBRToken kbrtoken;
@@ -970,7 +971,7 @@ contract MarketPlace {
         );
 
          kbrtoken.approve(address(this),products[_pid].price * (10 ** kbrtoken.decimals()));
-        // icsToken.transferFrom(msg.sender, address, b);
+       
 
         kbrtoken.transferFrom(
             msg.sender,
