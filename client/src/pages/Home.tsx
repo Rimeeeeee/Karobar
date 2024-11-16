@@ -98,7 +98,7 @@ const Home = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5 }}
         >
-          This application is currently on the Base Sepolia testnet. For any
+          Now with awesome NFT Awards. For any
           queries, please contact us at{" "}
           <a
             href="mailto:k4r034r@gmail.com"
@@ -202,11 +202,10 @@ const Home = () => {
             transition={{ type: "spring", stiffness: 300 }}
           >
             <h3 className="text-lg md:text-xl font-bold mb-4 text-teal-400">
-              Cross Chain Token Transfer
+              Awesome NFT Awards
             </h3>
             <p className="text-gray-300">
-              Secure and flexible transfer of multiple tokens over various
-              popular chains.
+              Now earn KBR NFTs by using K4R034R.
             </p>
           </motion.div>
         </div>
