@@ -503,6 +503,10 @@ contract People {
     function checkUserBlacklisted(address _user) external view returns (bool) {
         return userCheck[_user].blacklisted;
     }
+    function checkUserRating(address _user)external view returns (uint256){
+        require(isAUser[_user]==true,"not an user");
+        return userCheck[_user].userRating;
+    }
 }
 //BetterIndia-scheme currated for country's growth
 contract BetterIndia {
@@ -1005,3 +1009,146 @@ contract MarketPlace {
         return productArray;
     }
 }
+
+
+error TransferFailed();
+error NotEnoughTokens();
+
+contract NFTAward is ERC721URIStorage {
+  People public people;
+    address private immutable i_owner;
+    uint256 tokenId = 0;
+
+
+    struct NFT {
+        uint256 tokenId;
+        address owner;
+        address reciever;
+        uint256 rating;
+        
+    }
+
+    NFT[] public allListedNFTs;
+    string x;
+    string y;
+    string z;
+    mapping(address => NFT[]) public NFTListedByAddress;
+    mapping(address => NFT[]) public NFTOwnedByAddress;
+    mapping(uint256 => NFT) public idToNFT;
+    mapping(address=>mapping(uint256=>bool)) public nftCheck;
+
+    constructor(address people1,string memory uri1,string memory uri2,string memory uri3) ERC721("NFTAward", "KBRNFT") {
+        people = People(people1);
+        i_owner = (msg.sender);
+        x=uri1;
+        y=uri2;
+        z=uri3;
+    }
+
+    function claimToken()public {
+        
+        require(people.isAUser(msg.sender) == true, "invalid user");
+        if(people.checkUserRating(msg.sender)>=100){
+            require(nftCheck[msg.sender][100]==false,"already acquired");
+           tokenId++;
+        uint256 newTokenId = tokenId;
+         _safeMint(msg.sender, newTokenId);
+        _setTokenURI(newTokenId, x);
+
+        NFT memory newNFT = NFT(
+            newTokenId,
+            (address(this)),
+            (msg.sender),
+            100
+        );
+
+        idToNFT[newTokenId] = newNFT;
+        allListedNFTs.push(newNFT);
+        NFTListedByAddress[msg.sender].push(newNFT);
+          addNFTToOwner(msg.sender, idToNFT[newTokenId]);
+        nftCheck[msg.sender][100]=true;
+
+        }
+     else  if(people.checkUserRating(msg.sender)>=50){
+            require(nftCheck[msg.sender][50]==false,"already acquired");
+           tokenId++;
+        uint256 newTokenId = tokenId;
+         _safeMint(msg.sender, newTokenId);
+        _setTokenURI(newTokenId, y);
+
+        NFT memory newNFT = NFT(
+            newTokenId,
+            (address(this)),
+            (msg.sender),
+            50
+        );
+
+        idToNFT[newTokenId] = newNFT;
+        allListedNFTs.push(newNFT);
+        NFTListedByAddress[msg.sender].push(newNFT);
+        
+
+        
+          addNFTToOwner(msg.sender, idToNFT[newTokenId]);
+        nftCheck[msg.sender][50]=true;
+
+        }   
+     else  if(people.checkUserRating(msg.sender)>=10){
+            require(nftCheck[msg.sender][10]==false,"already acquired");
+           tokenId++;
+        uint256 newTokenId = tokenId;
+         _safeMint(msg.sender, newTokenId);
+        _setTokenURI(newTokenId, z);
+
+        NFT memory newNFT = NFT(
+            newTokenId,
+            (address(this)),
+            (msg.sender),
+            10
+        );
+
+        idToNFT[newTokenId] = newNFT;
+        allListedNFTs.push(newNFT);
+        NFTListedByAddress[msg.sender].push(newNFT);
+        
+          addNFTToOwner(msg.sender, idToNFT[newTokenId]);
+        nftCheck[msg.sender][10]=true;
+
+        }   
+
+    }
+
+ function getNFTOwnedByAddress(
+        address a
+    ) public view returns (NFT[] memory) {
+        return NFTOwnedByAddress[a];
+    }
+
+   
+    // Internal functions to update the mappings
+    function addNFTToOwner(address owner, NFT memory nft) internal {
+        NFTOwnedByAddress[owner].push(nft);
+    }
+
+    function removeNFTFromOwner(address owner, uint256 _tokenId) internal {
+        NFT[] storage ownedNFTs = NFTOwnedByAddress[owner];
+        for (uint256 i = 0; i < ownedNFTs.length; i++) {
+            if (ownedNFTs[i].tokenId == _tokenId) {
+                ownedNFTs[i] = ownedNFTs[ownedNFTs.length - 1];
+                ownedNFTs.pop();
+                break;
+            }
+        }
+    }
+
+
+    function getAllNFTs() public view returns (NFT[] memory) {
+        return allListedNFTs;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == i_owner, "Only Owner can Access This");
+        _;
+    }
+}
+

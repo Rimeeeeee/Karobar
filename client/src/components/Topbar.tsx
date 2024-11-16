@@ -7,7 +7,7 @@ import { readContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { download } from "thirdweb/storage";
 
-//import Abc from "./Basename";
+
 import { useKBRTokenContext } from "../context/context";
 
 
@@ -72,7 +72,7 @@ const TopBar: React.FC = () => {
       <div className="ml-12 hidden sm:block">
         {/* { ( */}
         <NavLink to={`/profile/${address}`} className="flex items-center space-x-2">
-          {/*<Abc />*/}@{address?.slice(0, 4) + "..." +address?.slice(-4)}
+        {address ? `${address.slice(0, 4)}...${address.slice(-4)}` : "No Address"}
         </NavLink>
         {/* // ) : (
         //   <div className="flex items-center space-x-2">
@@ -86,7 +86,7 @@ const TopBar: React.FC = () => {
       </div>
       <div>
         <span className="dancing-script-500 text-gradient font-bold text-xl sm:text-4xl ml-14 sm:ml-0">
-          K4R0B3R
+          K4R034R
         </span>
       </div>
 

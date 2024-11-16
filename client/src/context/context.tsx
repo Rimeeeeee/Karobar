@@ -23,6 +23,7 @@ interface KBRTokenContextProps {
   BetterIndia:any
   Marketplace:any
   TokenTransferor:any
+  NFTAward:any
   wallets: any
   client: any
   wallet: any
@@ -89,6 +90,11 @@ export const KBRTokenContextProvider = ({
     chain: defineChain(Number(import.meta.env.VITE_CHAIN_ID)),
     address: import.meta.env.VITE_TOKENTRANSFEROR_CONTRACT_ADDRESS as string,
   })
+  const NFTAward = getContract({
+    client,
+    chain: defineChain(Number(import.meta.env.VITE_CHAIN_ID)),
+    address: import.meta.env.VITE_NFTAWARD as string,
+  })
   return (
     <KBRTokenContext.Provider
       value={{
@@ -99,6 +105,7 @@ export const KBRTokenContextProvider = ({
         BetterIndia,
         Marketplace,
         TokenTransferor,
+        NFTAward,
         wallets,
         client,
         wallet,

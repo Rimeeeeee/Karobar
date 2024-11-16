@@ -1,4 +1,4 @@
-/*import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getAvatar,
   getName,
@@ -68,21 +68,21 @@ const Abc: React.FC<AbcProps> = ({ uid }) => {
   if (error) {
     return <div>Error: {error}</div>;
   }
-*/
-  /*return (
+
+  return (
     <div className="flex items-center">
       <Identity
         address={`0x${address?.slice(2)}`}
         chain={baseSepolia}
         schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
       >
-        */
-       // {/*<Avatar address={`0x${address?.slice(2)}`} chain={baseSepolia} />*/}
-       /* <Name address={`0x${address?.slice(2)}`} chain={baseSepolia} />
+        
+       {/*<Avatar address={`0x${address?.slice(2)}`} chain={baseSepolia} />*/}
+       <Name address={`0x${address?.slice(2)}`} chain={baseSepolia} />
         <Address />
       </Identity>
     </div>
   );
 };
 
-export default Abc;*/
+export default Abc;

@@ -1,0 +1,1 @@
+{"version":3,"file":"server-errors.d.ts","sourceRoot":"","sources":["../../../src/errors/server-errors.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAE,MAAM,cAAc,CAAC;AAGzC,qBAAa,WAAY,SAAQ,SAAS;gBAC5B,UAAU,EAAE,MAAM,EAAE,OAAO,EAAE,MAAM;CAQhD"}

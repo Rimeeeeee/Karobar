@@ -33,7 +33,7 @@ const RWA: React.FC = () => {
         {isRWARoute && (
           <div className="w-full flex justify-center items-center flex-col z-0">
             <h2 className="text-3xl sm:text-5xl font-bold text-primary text-white">
-              Tokenize your Assets on Base!!!
+              Tokenize your Assets Today!!!
             </h2>
           </div>
         )}

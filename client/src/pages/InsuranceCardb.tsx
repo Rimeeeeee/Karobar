@@ -97,10 +97,7 @@ const InsuranceCardb: React.FC<InsuranceSchemeProps> = ({
         <p className="text-lg">
           <span className="font-semibold">Total Amount:</span> {Number(totalamount)/1e18} ETH
         </p>
-        <p className="text-lg">
-          <span className="font-semibold">Number of Investors:</span>{" "}
-          {Number(no_of_investors)}
-        </p>
+        
       </div>
       <button
         onClick={handleBuyInsurance}

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@flipsidecrypto/sdk": "^2.1.0"
+  }
+}

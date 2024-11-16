@@ -21,6 +21,13 @@ import CreateInsurance from "./pages/CreateInsurance";
 import InsurancePage from "./pages/InsurancePage";
 import MyInsurance from "./pages/MyInsurance";
 import Merch from "./pages/Merch";
+import Work from "./pages/Work";
+import TransactionData from "./pages/Work";
+import NftPlatforms from "./pages/Work1";
+import NFTFetcher from "./pages/Work";
+import QuickNodeDataFetcher from "./pages/Work";
+import AggregatorDataFetcher from "./pages/Work";
+import CombinedDataFetcher from "./pages/Work";
 
 export function App() {
   const { PeopleContract } = useKBRTokenContext();
@@ -63,6 +70,8 @@ export function App() {
                 path="/followers/:creatorAddress"
                 element={<FollowersPage contract={PeopleContract} />}
               />
+              <Route path="/src-arg"element={<CombinedDataFetcher/>}/>
+              <Route path="/marketstat"element={<NftPlatforms/>}/>
             </Routes>
           </main>
         </div>

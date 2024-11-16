@@ -27,7 +27,7 @@ const Profile: React.FC = () => {
           params: [],
         });
 
-        const totalUsers1 = totalUsers.slice(1); 
+        const totalUsers1 = totalUsers; 
 
         const usersWithImages = await Promise.all(
           totalUsers1.map(async (user: any) => {
