@@ -70,6 +70,7 @@ const ViewProfile: React.FC = () => {
             name: data.name,
             userid: data.userid,
             bio: data.bio,
+            caption:data.caption,
             imageHash: data.image_hash,
             followers: data.followers.length,
             following: data.following.length,
@@ -135,7 +136,7 @@ const ViewProfile: React.FC = () => {
 
   return (
     <div className="p-4 w-full h-full max-w-screen-lg mx-auto">
-      <div className="lg:mt-4 p-4 bg-black rounded-lg shadow-xl">
+      <div className="lg:mt-6 p-4 bg-black rounded-lg shadow-xl">
         <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-3 mt-4">
           <img
             src={imageUrl}
@@ -152,6 +153,7 @@ const ViewProfile: React.FC = () => {
             <p className="text-gray-400 text-xs sm:text-sm block lg:hidden">
               @{user.userid?.slice(0, 4) + "..." + user.userid?.slice(-4)}
             </p>
+            <p className="text-gray-300 text-sm sm:text-base font-semibold">{user.caption}</p>
             <p className="text-gray-300 text-sm sm:text-base">{user.bio}</p>
           </div>
         </div>
